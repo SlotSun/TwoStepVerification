@@ -47,6 +47,12 @@ android {
 }
 
 dependencies {
+    api(libs.kotlinx.coroutines)
+    api(libs.gson)
+    // 网络请求
+    implementation libs.retrofit
+    implementation libs.okhttp
+    implementation libs.okhttp.logging
     //沉浸式状态栏
     implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
     implementation 'com.geyifeng.immersionbar:immersionbar-ktx:3.2.2'
