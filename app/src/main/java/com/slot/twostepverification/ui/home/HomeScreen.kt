@@ -15,8 +15,8 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
@@ -48,7 +48,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.slot.twostepverification.R
+import com.slot.twostepverification.TwoDestinations
+import com.slot.twostepverification.TwoNavGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -72,20 +75,22 @@ fun HomeScreen(
         modifier = Modifier.systemBarsPadding(),
         topBar = {
             CenterAlignedTopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                ),
                 title = {
-                    Text(
-                        "两步验证", maxLines = 1, overflow = TextOverflow.Ellipsis
-                    )
+                    Text("两步验证", maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
                 actions = {
-                    IconButton(onClick = { /* do something */ }) {
+                    IconButton(onClick = {
+                        onNavigateToConfig()
+                    }) {
                         Icon(
                             imageVector = Icons.Filled.Edit,
                             contentDescription = "Localized description"
                         )
                     }
                 },
-                scrollBehavior = scrollBehavior,
             )
         },
         floatingActionButton = {

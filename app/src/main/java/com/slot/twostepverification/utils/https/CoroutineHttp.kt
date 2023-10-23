@@ -151,6 +151,7 @@ class CoroutineHttp private constructor() {
         }
     }
 
+    //json数据
     suspend fun <T : HttpResponse> get(
         request: HttpRequest,
         type: Class<T>,

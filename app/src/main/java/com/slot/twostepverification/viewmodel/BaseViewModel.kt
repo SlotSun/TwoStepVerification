@@ -1,4 +1,4 @@
-package com.slot.twostepverification.utils
+package com.slot.twostepverification.viewmodel
 
 import androidx.lifecycle.ViewModel
 

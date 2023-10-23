@@ -23,6 +23,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.slot.twostepverification.ui.config.ConfigScreen
 import com.slot.twostepverification.ui.home.HomeScreen
 import com.slot.twostepverification.ui.home.HomeViewModel
+import com.slot.twostepverification.ui.libs.LibsDetailScreen
+import com.slot.twostepverification.ui.libs.LibsScreen
 
 @Composable
 fun TwoNavGraph(
@@ -84,9 +86,22 @@ fun TwoNavGraph(
         }
         composable(TwoDestinations.CONFIG) {
             ConfigScreen(
+                onNavigateToLibs = { twoNavActions.navigateToLibs() },
                 onNavigateToBackup = { twoNavActions.navigateToConfig() },
-
-                )
+                onPopBackStackToMain = { twoNavActions.popBackStack(TwoDestinations.MAIN_ROUTE) }
+            )
+        }
+        composable(TwoDestinations.LIBS) {
+            LibsScreen(
+                onNavigateToLibDetail = { twoNavActions.navigateToLibDetail(it) },
+                onPopBackStackToConfig = { twoNavActions.popBackStack(TwoDestinations.CONFIG) }
+            )
+        }
+        composable("${TwoDestinations.LIB_DETAIL}/{lib}") { backStackEntry ->
+            LibsDetailScreen(
+                lib = backStackEntry.arguments?.getString("lib") ?: "",
+                onPopBackStackToLibs = { twoNavActions.popBackStack(TwoDestinations.LIBS) }
+            )
         }
     }
 }
@@ -99,8 +114,8 @@ class TwoNavActions(
         navigate(TwoDestinations.CONFIG)
     }
 
-    val navigateToLibDetail: () -> Unit = {
-        navigate(TwoDestinations.LIB_DETAIL)
+    val navigateToLibDetail: (lib: String) -> Unit = {
+        navigate(TwoDestinations.LIB_DETAIL, "/$it")
     }
 
     val navigateToLibs: () -> Unit = {
@@ -113,7 +128,9 @@ class TwoNavActions(
     val navigateToWebdavPath: () -> Unit = {
         navigate(TwoDestinations.WEBDAV_PATH)
     }
-
+    val popBackStack: (route: String) -> Unit = {
+        navController.popBackStack(it, false)
+    }
 
     private fun navigate(directions: String, arguments: String = "") {
         val options = navOptions { launchSingleTop = false }

@@ -1,64 +1,66 @@
 package com.slot.twostepverification.ui.theme
 
 import android.app.Activity
-import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import com.slot.twostepverification.const.DYNAMIC_COLOR
+import com.slot.twostepverification.utils.data.DataStoreUtils
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Purple80
-)
+const val DYNAMIC_COLOR_SCHEME = "dynamicLightColorScheme"
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple80,
-    secondary = Purple80,
-    tertiary = Purple80,
-    surface = Purple80,
-    onSurface = Purple80,
-    onPrimary = Purple80,
-    onSecondary = Purple80,
+// 天蓝色
+const val SKY_BLUE_THEME = 0
+
+// 灰色
+const val GRAY_THEME = 1
+
+// 绿色
+const val GREEN_THEME = 3
+
+// 紫色
+const val PURPLE_THEME = 4
+
+// 橘黄色
+const val ORANGE_THEME = 5
+
+// 青色
+const val CYAN_THEME = 8
+
+// 品红色
+const val MAGENTA_THEME = 9
+
+/**
+ * 主题状态
+ */
+val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+    mutableIntStateOf(getDefaultThemeId())
+}
+val dynamicColorState: MutableState<Boolean> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+    mutableStateOf(DataStoreUtils.getSyncData(DYNAMIC_COLOR,true))
+}
 
 
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
-)
+fun getDefaultThemeId(): Int {
+    return 4
+}
 
 @Composable
 fun TwoStepVerificationTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
+    colorScheme: ColorScheme,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
@@ -69,8 +71,61 @@ fun TwoStepVerificationTheme(
         }
     }
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme= colorScheme,
         typography = Typography,
         content = content
     )
+}
+
+/**
+ * 通过主题 ID 来获取需要的主题
+ */
+fun getThemeForThemeId(themeId: Int) = when (themeId) {
+    SKY_BLUE_THEME -> {
+        playLightColors(
+            primary = primaryLight
+        )
+    }
+
+    GRAY_THEME -> {
+        playLightColors(
+            primary = gray_theme
+        )
+    }
+
+    GREEN_THEME -> {
+        playLightColors(
+            primary = green_theme
+        )
+    }
+
+    PURPLE_THEME -> {
+        playLightColors(
+            primary = purple_theme,
+        )
+    }
+
+    ORANGE_THEME -> {
+        playLightColors(
+            primary = orange_theme
+        )
+    }
+
+    CYAN_THEME -> {
+        playLightColors(
+            primary = cyan_theme
+        )
+    }
+
+    MAGENTA_THEME -> {
+        playLightColors(
+            primary = magenta_theme
+        )
+    }
+
+    else -> {
+        playLightColors(
+            primary = primaryLight
+        )
+    }
 }
