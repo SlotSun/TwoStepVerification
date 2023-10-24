@@ -66,15 +66,16 @@ val onSecondaryDark = Color(0xFF3A3A3A)
 val onBackgroundDark = white
 val onSurfaceDark = white
 
-@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun getCurrentColors(): ColorScheme {
     val ctx = LocalContext.current
     val themeType = themeTypeState.value
     val dy = dynamicColorState.value
-    val colorScheme = if (dy) {
+    val colorScheme = if (dy && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ) {
         dynamicLightColorScheme(context = ctx)
     } else {
+        //如果系统小于安卓12 关闭动态取色
+        dynamicColorState.value = false
         if (isSystemInDarkTheme()) {
             playDarkColors()
         } else {

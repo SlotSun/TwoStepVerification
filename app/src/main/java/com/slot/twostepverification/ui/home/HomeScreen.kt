@@ -15,8 +15,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
@@ -28,6 +26,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
@@ -48,10 +48,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.slot.twostepverification.R
-import com.slot.twostepverification.TwoDestinations
-import com.slot.twostepverification.TwoNavGraph
+import com.slot.twostepverification.const.locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -79,7 +77,7 @@ fun HomeScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("两步验证", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(text = locale("app_name"), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
                 actions = {
                     IconButton(onClick = {
@@ -138,7 +136,7 @@ fun HomeScreen(
                     }
                 ) {
                     ListItem(
-                        headlineContent = { Text("扫描二维码") },
+                        headlineContent = { Text(text = locale("Scan_QR_Code")) },
                         leadingContent = {
                             Icon(
                                 painter = painterResource(R.drawable.photo_camera),
@@ -153,7 +151,7 @@ fun HomeScreen(
                     }
                 ) {
                     ListItem(
-                        headlineContent = { Text("手动输入") },
+                        headlineContent = { Text(locale("manual_input")) },
                         leadingContent = {
                             Icon(
                                 Icons.Filled.Edit,
@@ -168,7 +166,7 @@ fun HomeScreen(
                     }
                 ) {
                     ListItem(
-                        headlineContent = { Text("解析URL") },
+                        headlineContent = { Text(locale("parse_uri")) },
                         leadingContent = {
                             Icon(
                                 Icons.Filled.Email,

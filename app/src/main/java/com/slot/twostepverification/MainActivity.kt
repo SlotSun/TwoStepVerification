@@ -21,7 +21,6 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(ComposeView(this).apply {
             setContent {
                 val colors = getCurrentColors()

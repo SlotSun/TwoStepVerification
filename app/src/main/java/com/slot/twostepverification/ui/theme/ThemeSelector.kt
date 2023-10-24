@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.slot.twostepverification.R
+import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.CHANGED_THEME
 import com.slot.twostepverification.utils.data.DataStoreUtils
 
@@ -72,7 +73,7 @@ fun ThemeDialog(
                     onDismissRequest()
                 }
             ) {
-                Text("确定")
+                Text(text = localeState.value.getValue("OK"))
             }
         },
     )
@@ -105,7 +106,7 @@ fun ThemeGrid() {
             }
         }
         Text(
-            text = stringResource(R.string.theme_warn),
+            text = localeState.value.getValue("theme_warn"),
             modifier = Modifier
                 .padding(15.dp),
             color = Color.Black,

@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,7 +37,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.slot.twostepverification.R
+import com.slot.twostepverification.TwoApplication.Companion.localeState
+import com.slot.twostepverification.const.locale
+import com.slot.twostepverification.ui.config.locale.localeSelector
 import com.slot.twostepverification.ui.theme.ThemeDialog
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview()
@@ -70,7 +77,11 @@ fun ConfigScreen(
                     }
                 },
                 title = {
-                    Text("设置", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(
+                        text = locale("settings"),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 },
             )
         }
@@ -86,19 +97,22 @@ fun ConfigScreen(
                     .paddingFromBaseline(top = 16.dp),
                 elevation = 0.dp
             ) {
-                Text("外观", color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = localeState.value.getValue("appearance"),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
             ListItem(
                 modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
                 headlineContent = {
                     Text(
-                        "动态取色",
+                        text = localeState.value.getValue("dynamic_color"),
                         style = titleStyle
                     )
                 },
                 supportingContent = {
                     Text(
-                        "跟随系统桌面自动获取主题色",
+                        text = localeState.value.getValue("follow_system_desktop_for_theme_color"),
                         style = ubTitleStyle
                     )
                 },
@@ -106,7 +120,7 @@ fun ConfigScreen(
                     Switch(
                         checked = configUiState.dynamicColorChecked,
                         onCheckedChange = {
-                            viewModel.setDynamicColor(it)
+                            viewModel.setDynamicColor(it, ctx = ctx)
                         }
                     )
                 }
@@ -117,43 +131,52 @@ fun ConfigScreen(
                         .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
                         .clickable(
                             onClick = {
-                                viewModel.openDialog()
+                                viewModel.openThemeDialog()
                             }
                         ),
                     headlineContent = {
                         Text(
-                            "选取颜色",
+                            text = localeState.value.getValue("select_color"),
                             style = titleStyle
                         )
                     },
                     supportingContent = {
                         Text(
-                            "手动选择一个颜色，这将作为种子被应用",
+                            text = localeState.value.getValue("manually_select_a_color_as_seed"),
                             style = ubTitleStyle
                         )
                     },
                 )
             }
-            configItem("切换语言", "正常来说，默认就好") { }
+
+            configItem(
+                title = localeState.value.getValue("Switch_Language"),
+                ubTitle = localeState.value.getValue("The_default_setting_is_usually_fine")
+            ) {
+                viewModel.openLocaleDialog()
+            }
             Card(
                 modifier = Modifier
                     .padding(vertical = 12.dp, horizontal = 16.dp)
                     .paddingFromBaseline(top = 16.dp),
                 elevation = 0.dp
             ) {
-                Text("数据", color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = localeState.value.getValue("security_authentication"),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
             ListItem(
                 modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
                 headlineContent = {
                     Text(
-                        "安全认证",
+                        text = localeState.value.getValue("security_authentication"),
                         style = titleStyle
                     )
                 },
                 supportingContent = {
                     Text(
-                        "启动时选择指纹解锁",
+                        text = localeState.value.getValue("perform_security_verification_on_startup"),
                         style = ubTitleStyle
                     )
                 },
@@ -166,23 +189,43 @@ fun ConfigScreen(
                     )
                 }
             )
-            configItem("备份和恢复", "数据上云，减少意外丢失风险") { }
+            configItem(
+                title = localeState.value.getValue("backup_and_restore"),
+                ubTitle = localeState.value.getValue("data_cloud_backup_to_reduce_risk_of_accidental_loss")
+            ) { }
             Card(
                 modifier = Modifier
                     .padding(vertical = 12.dp, horizontal = 16.dp)
                     .paddingFromBaseline(top = 16.dp),
                 elevation = 0.dp
             ) {
-                Text("关于", color = MaterialTheme.colorScheme.primary)
+                Text(
+                    text = localeState.value.getValue("About"),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
-            configItem("开源许可", "没有他们就没有我☺") { onNavigateToLibs() }
-            configItem("项目主页", "看看代码，赏口饭吃") { viewModel.openGithub(ctx = ctx) }
+            configItem(
+                title = localeState.value.getValue("open_source_license"),
+                ubTitle = localeState.value.getValue("no_them_no_me")
+            ) { onNavigateToLibs() }
+            configItem(
+                title = localeState.value.getValue("project_homepage"),
+                ubTitle = localeState.value.getValue("View_Source_Code_and_find_job")
+            ) { viewModel.openGithub(ctx = ctx) }
 
-            if (configUiState.openDialog){
+            if (configUiState.openThemeDialog) {
                 ThemeDialog(
-                    dialogTitle = "主题选择器",
-                    onDismissRequest = { viewModel.closeDialog() },
+                    dialogTitle = localeState.value.getValue("select_color"),
+                    onDismissRequest = { viewModel.closeThemeDialog() },
                     icon = Icons.Filled.Info
+                )
+            }
+            if (configUiState.openLocaleDialog) {
+                localeSelector(
+                    onDismissRequest = { viewModel.closeLocaleDialog() },
+                    changeLocale = { v, k ->
+                        viewModel.changeLocale(v, k)
+                    }
                 )
             }
         }
@@ -205,13 +248,13 @@ fun configItem(title: String, ubTitle: String, function: () -> Unit) {
             ),
         headlineContent = {
             Text(
-                "$title",
+                title,
                 style = titleStyle
             )
         },
         supportingContent = {
             Text(
-                "$ubTitle",
+                ubTitle,
                 style = ubTitleStyle
             )
         },

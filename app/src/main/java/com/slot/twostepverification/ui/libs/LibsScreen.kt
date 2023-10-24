@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,6 +39,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
+import com.slot.twostepverification.R
+import com.slot.twostepverification.const.languageEN
+import com.slot.twostepverification.const.locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,7 +73,7 @@ fun LibsScreen(
                     }
                 },
                 title = {
-                    Text("设置", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(text = locale("Third_Party_Disclaimer"), maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
             )
         }

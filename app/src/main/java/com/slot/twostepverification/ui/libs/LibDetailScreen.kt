@@ -40,7 +40,7 @@ fun LibsDetailScreen(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    lateinit var licenseText: String
+//    lateinit var licenseText: String
     LaunchedEffect(Unit) {
         viewModel.getLicenseString(lib)
     }
@@ -62,7 +62,7 @@ fun LibsDetailScreen(
                     }
                 },
                 title = {
-                    Text("$lib", maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(lib, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
             )
         }
