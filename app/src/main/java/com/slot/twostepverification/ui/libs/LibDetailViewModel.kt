@@ -1,10 +1,6 @@
 package com.slot.twostepverification.ui.libs
 
-import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.slot.twostepverification.utils.https.HttpRequest
-import com.slot.twostepverification.utils.https.HttpResponse
 import com.slot.twostepverification.utils.https.get
 import com.slot.twostepverification.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

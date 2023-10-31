@@ -1,4 +1,8 @@
 package com.slot.twostepverification.utils
 
-class Parse {
+import android.net.Uri
+import androidx.compose.ui.text.toUpperCase
+import com.slot.twostepverification.data.entity.VerificationItem
+
+object Parse {
 }

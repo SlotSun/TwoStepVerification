@@ -45,7 +45,7 @@ val pageLight = Color(0xFFD0BCFF)
 // 浅色 主题颜色
 val primaryLight = Color(0xFF85B4FC)
 val primaryVariantLight = Color(0xFF7D5260)
-val secondaryLight = Color(0xFF3f2c2c)
+val secondaryLight = Color(0xFFFFA500)
 val backgroundLight = pageLight
 val surfaceLight = pageLight
 val onPrimaryLight = Color(0xFF232323)

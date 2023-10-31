@@ -37,7 +37,9 @@ fun localeSelector(
     val options: List<String> = locales.map {
         it.key
     }
+    /// todo:需要优化
     var selectedOption by remember { mutableStateOf(DataStoreUtils.getSyncData(LOCALE, "English")) }
+
     AlertDialog(
         title = {
             Text(

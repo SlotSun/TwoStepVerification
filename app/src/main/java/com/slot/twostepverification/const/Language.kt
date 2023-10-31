@@ -98,7 +98,7 @@ val languageCN: Map<String, String> = mapOf(
     "verify_your_identity" to "验证您的身份",
     "scan_qr_code" to "扫描二维码",
     "settings" to "设置",
-    "appearance" to "外貌",
+    "appearance" to "外观",
     "dynamic_color" to "动态色彩",
     "follow_system_desktop_for_theme_color" to "主题颜色来自系统桌面",
     "select_color" to "选择颜色",

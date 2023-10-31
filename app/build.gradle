@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinParcelize)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.protobuf)
 }
 
 android {
@@ -18,20 +21,38 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation": "$projectDir/schemas".toString(),
+                        "room.incremental"   : "true"
+                ]
+            }
+        }
     }
 
     buildTypes {
+
+        debug {
+            // Check if you have this parameter enabled.
+            // Add if missing and rebuild your app to device.
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+
+
         release {
+            debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         compose true
@@ -46,20 +67,64 @@ android {
     }
 }
 
-dependencies {
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.8.0'
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option "lite"
+                }
+            }
+        }
+    }
+}
 
+
+dependencies {
     api(libs.kotlinx.coroutines)
     api(libs.gson)
+
+    // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.76'
+
+
+    //Material Icons
+    implementation "androidx.compose.material:material-icons-core:1.5.4"
+    implementation "androidx.compose.material:material-icons-extended:1.5.4"
+    // mlkit
+    implementation libs.mlkit.barcode.scanning
+    implementation libs.mlkit.text.recognition
+    implementation libs.google.text.recognition.chinese
+
+    //permissions
+    implementation libs.accompanist.permissions
+    // 加载图片
+    implementation libs.matisse
+    implementation libs.coil.compose
+    // CameraX
+    implementation libs.androidx.camera.camera.camera22
+    implementation libs.androidx.camera.camera.lifecycle2
+    implementation libs.androidx.camera.camera.view2
+    // 解析验证码
+    implementation 'com.eatthepath:java-otp:0.4.0'
     // 网络请求
     implementation libs.retrofit
     implementation libs.okhttp
     implementation libs.okhttp.logging
     // data
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
-    //沉浸式状态栏
-    implementation 'com.geyifeng.immersionbar:immersionbar:3.2.2'
-    implementation 'com.geyifeng.immersionbar:immersionbar-ktx:3.2.2'
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.32.0"
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+
+    //google
+    implementation libs.guava
+    implementation libs.google.protobuf.javalite
+
     implementation libs.accompanist.systemuicontroller
     implementation libs.androidx.navigation.compose
     implementation libs.core.ktx

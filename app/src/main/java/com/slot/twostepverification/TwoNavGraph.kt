@@ -25,6 +25,7 @@ import com.slot.twostepverification.ui.home.HomeScreen
 import com.slot.twostepverification.ui.home.HomeViewModel
 import com.slot.twostepverification.ui.libs.LibsDetailScreen
 import com.slot.twostepverification.ui.libs.LibsScreen
+import com.slot.twostepverification.ui.scan.ScanView
 
 @Composable
 fun TwoNavGraph(
@@ -82,6 +83,7 @@ fun TwoNavGraph(
         composable(TwoDestinations.MAIN_ROUTE) {
             HomeScreen(
                 onNavigateToConfig = { twoNavActions.navigateToConfig() },
+                onNavigateToScan = {twoNavActions.navigateToScan()}
             )
         }
         composable(TwoDestinations.CONFIG) {
@@ -103,6 +105,11 @@ fun TwoNavGraph(
                 onPopBackStackToLibs = { twoNavActions.popBackStack(TwoDestinations.LIBS) }
             )
         }
+        composable(TwoDestinations.SCAN) {
+            ScanView(
+                onNavigateBack = { twoNavActions.popBackStackLast()}
+            )
+        }
     }
 }
 
@@ -112,6 +119,9 @@ class TwoNavActions(
     // 设置
     val navigateToConfig: () -> Unit = {
         navigate(TwoDestinations.CONFIG)
+    }
+    val navigateToScan: () -> Unit = {
+        navigate(TwoDestinations.SCAN)
     }
 
     val navigateToLibDetail: (lib: String) -> Unit = {
@@ -131,6 +141,10 @@ class TwoNavActions(
     val popBackStack: (route: String) -> Unit = {
         navController.popBackStack(it, false)
     }
+    val popBackStackLast: () -> Unit = {
+        navController.popBackStack()
+    }
+
 
     private fun navigate(directions: String, arguments: String = "") {
         val options = navOptions { launchSingleTop = false }
@@ -146,4 +160,5 @@ object TwoDestinations {
     const val LIB_DETAIL = "lib_detail"
     const val WEBDAV = "webdav"
     const val WEBDAV_PATH = "webdav_path"
+    const val SCAN = "scan"
 }
