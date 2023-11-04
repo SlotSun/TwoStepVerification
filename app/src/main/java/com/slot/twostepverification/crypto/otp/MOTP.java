@@ -3,7 +3,6 @@ package com.slot.twostepverification.crypto.otp;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 
-
 import com.slot.twostepverification.utils.encoding.Hex;
 
 import java.nio.charset.StandardCharsets;

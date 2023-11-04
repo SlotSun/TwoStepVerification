@@ -1,9 +1,7 @@
 package com.slot.twostepverification.utils.otp;
 
-
 import com.slot.twostepverification.utils.encoding.Base32;
 import com.slot.twostepverification.utils.encoding.EncodingException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 

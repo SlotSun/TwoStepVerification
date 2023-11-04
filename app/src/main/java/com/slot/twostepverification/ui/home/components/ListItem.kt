@@ -50,7 +50,7 @@ import java.security.Key
 
 @Composable
 fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),) {
-    var preValue by remember { mutableFloatStateOf(1.0f) }
+    var preValue = 0.001f
     var beginTime by remember { mutableFloatStateOf((1- TotpInfo.getMillisTillNextRotation(30).toFloat() / (30 * 1000L))) }
     val transition = rememberInfiniteTransition(label = "")
     var lastTime by remember{ mutableIntStateOf(TotpInfo.getMillisTillNextRotation(30).toInt())}
@@ -67,7 +67,11 @@ fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),
     val period = item.time!!
     val secret = item.key
     LaunchedEffect(Unit) {
-
+        token = try {
+            TotpInfo(secret, algorithm, digits, period).getOtp()
+        } catch (e: Exception) {
+            e.toString()
+        }
     }
     // 每30s获取一次
     SideEffect {
@@ -75,16 +79,13 @@ fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),
         //动画不能为0
         lastTime = (beginTime*30*1000L+1).toInt()
         if (process.value <= preValue && item.type == "TOTP") {
-            //防止过低
-            preValue = process.value+0.01F
             token = try {
-                Log.d("process", "${item.key}")
                 TotpInfo(secret, algorithm, digits, period).getOtp()
             } catch (e: Exception) {
                 e.toString()
             }
             //记录当前刷新时间 第二次调用直接从0开始 ：process从0->1递增
-            Log.d("got", token)
+            Log.d("got", preValue.toString())
         }
 
     }

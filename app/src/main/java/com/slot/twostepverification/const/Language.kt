@@ -84,6 +84,8 @@ val languageEN: Map<String, String> = mapOf(
     "Long_press_to_switch_output_directory" to "Long press to switch output directory",
     "sorry_dynamic_color" to "Only Android 12 support dynamic color,Sorry!",
     "title_activity_language_dialog" to "LanguageDialog",
+    "ERROR" to "出现错误",
+    "TheQRcodeisinvalid" to "The valid QR code in the picture cannot be recognized, please try again with another one"
 )
 
 
@@ -168,6 +170,8 @@ val languageCN: Map<String, String> = mapOf(
     "Long_press_to_switch_output_directory" to "长按切换输出目录",
     "sorry_dynamic_color" to "只有安卓12支持动态颜色，对不起！",
     "title_activity_language_dialog" to "语言对话框",
+    "ERROR" to "出现错误",
+    "TheQRcodeisinvalid" to "无法识别图片中的有效二维码，请换一张重试"
 
     )
 val locales: Map<String, Map<String, String>> = mapOf(

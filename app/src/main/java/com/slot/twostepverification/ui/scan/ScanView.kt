@@ -1,5 +1,6 @@
 package com.slot.twostepverification.ui.scan
 
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,13 +11,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FlashOff
 import androidx.compose.material.icons.filled.FlashOn
 import androidx.compose.material.icons.filled.Photo
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,14 +30,30 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.mlkit.vision.common.InputImage
+import com.slot.twostepverification.TwoApplication
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.camera.AspectRatioCameraConfig
 import com.slot.twostepverification.utils.camera.CameraViewPermission
 import com.slot.twostepverification.utils.camera.DrawCropScan
+import com.slot.twostepverification.utils.img.coil.CoilImageEngine
+import github.leavesczy.matisse.DefaultMediaFilter
+import github.leavesczy.matisse.Matisse
+import github.leavesczy.matisse.MatisseContract
+import github.leavesczy.matisse.MediaResource
+import github.leavesczy.matisse.MimeType
+import github.leavesczy.matisse.NothingCaptureStrategy
+import java.io.IOException
 
 /*
 *   扫码
@@ -53,6 +74,34 @@ fun ScanView(
         model.analyze()
         model
     }
+    val scanUiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // select_picture
+    val mediaPickerLauncher =
+        rememberLauncherForActivityResult(contract = MatisseContract()) { result: List<MediaResource>? ->
+            if (!result.isNullOrEmpty()) {
+                val mediaResource = result[0]
+                val uri = mediaResource.uri
+                val inputImage: InputImage
+                try {
+                    inputImage = InputImage.fromFilePath(ctx, uri)
+                    // 图片源自用户选择：需要提示图片错误
+                    viewModel.analyzeBarcode(inputImage = inputImage, select = true)
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+
+
+            }
+        }
+
+    val matisse = Matisse(
+        maxSelectable = 1,
+        mediaFilter = DefaultMediaFilter(supportedMimeTypes = MimeType.ofImage()),
+        imageEngine = CoilImageEngine(),
+        captureStrategy = NothingCaptureStrategy
+    )
+
     //UI
     Box(
         contentAlignment = Alignment.TopCenter,
@@ -81,6 +130,7 @@ fun ScanView(
                 .padding(bottom = 25.dp, end = 25.dp)
                 .padding(vertical = 15.dp)
         ) {
+            // 闪光灯
             Button(
                 onClick = { viewModel.toggleTorch() },
                 modifier = Modifier
@@ -88,12 +138,12 @@ fun ScanView(
                     .align(alignment = Alignment.End),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
                 shape = RoundedCornerShape(10.dp)
-                ) {
+            ) {
                 Icon(
                     imageVector = if (viewModel.enableTorch.value) {
-                        Icons.Filled.FlashOff
-                    } else {
                         Icons.Filled.FlashOn
+                    } else {
+                        Icons.Filled.FlashOff
                     },
                     contentDescription = "Image",
                     tint = Color.White,
@@ -101,14 +151,16 @@ fun ScanView(
                         .size(40.dp),
                 )
             }
-
+            // 选取图片
             Button(
                 shape = RoundedCornerShape(4.dp),
                 colors = ButtonDefaults.buttonColors(
                     MaterialTheme.colorScheme.primary.copy(alpha = 0.3F),
                     contentColor = MaterialTheme.colorScheme.primary
                 ),
-                onClick = {},
+                onClick = {
+                    mediaPickerLauncher.launch(matisse)
+                },
             ) {
                 Icon(
                     Icons.Filled.Photo,
@@ -123,10 +175,34 @@ fun ScanView(
         }
 
     }
+    // 弹出警告
+    if (scanUiState.openWarnDialog) {
+        AlertDialog(
+            title = {
+                Text(locale("ERROR"))
+            },
+            text = {
+                Text(locale("TheQRcodeisinvalid"))
+            },
+            onDismissRequest = {
+                viewModel.closeWarnDialog()
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.closeWarnDialog()
+                }) {
+                    Text(
+                        text = locale("OK"),
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Normal)
+                    )
+                }
+            }
+        )
+    }
+    // 扫描到结果，返回主页面
     if (viewModel.scanBarcodeRes.value) {
         viewModel.scanBarcodeRes.value = false
         onNavigateBack()
-//            viewModel.analyzeReStart()
     }
     // 实现切换界面，重置扫码分析状态
     DisposableEffect(lifecycleOwner) {

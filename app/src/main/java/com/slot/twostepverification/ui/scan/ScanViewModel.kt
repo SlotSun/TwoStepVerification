@@ -3,7 +3,6 @@ package com.slot.twostepverification.ui.scan
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
@@ -11,6 +10,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -19,11 +19,14 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions
+import com.slot.twostepverification.const.DYNAMIC_COLOR
 import com.slot.twostepverification.data.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
+import com.slot.twostepverification.ui.config.ConfigUIState
 import com.slot.twostepverification.ui.home.TwoUiState
 import com.slot.twostepverification.utils.camera.CameraConfig
 import com.slot.twostepverification.utils.camera.cropTextImage
+import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.otp.GoogleAuth
 import com.slot.twostepverification.utils.otp.GoogleAuthInfoException
 import kotlinx.coroutines.Dispatchers
@@ -35,9 +38,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
 
-class ScanViewModel(config: CameraConfig) : ViewModel() {
+data class ScanUIState(
+    var openWarnDialog: Boolean = false,
+)
 
+class ScanViewModel(config: CameraConfig) : ViewModel() {
+    private val _scanUiState = MutableStateFlow(ScanUIState())
     private val _uiState = MutableStateFlow(TwoUiState())
+    val uiState: StateFlow<ScanUIState> = _scanUiState.asStateFlow()
     val preview = config.options(Preview.Builder())
     val imageCapture: ImageCapture = config.options(ImageCapture.Builder())
     val imageAnalysis: ImageAnalysis = config.options(ImageAnalysis.Builder())
@@ -53,12 +61,17 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
     var scanText = mutableStateOf("")
     var scanBarcodeRes = mutableStateOf(false)
 
+    // select_picture
+
+
     // 是否开启闪光灯
     var enableTorch: MutableState<Boolean> = mutableStateOf(false)
 
     private var useOCR = false
 
+
     private var enableAnalysis = true
+
 
 
     // 重新识别
@@ -66,6 +79,9 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
         enableAnalysis = true
     }
 
+    fun analyzeStop() {
+        enableAnalysis = false
+    }
 
     /**
      *  解析扫码结果
@@ -95,11 +111,7 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
                 textRecognizer.process(inputImageCrop)
                     .addOnSuccessListener {
                         val text = it.text
-
-                        Log.d("zzz", "textRecognizer onSuccess")
-                        Log.d("zzzzzz OCR result", "ocr result: $text")
                         scanText.value = text
-
                         analyzeReStart()
 
                     }.addOnFailureListener {
@@ -110,41 +122,8 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
                     }
 
             } else {
-                barcodeScanner.process(inputImage)
-                    .addOnSuccessListener {
-                        Log.d("zzz", "barcodeScanner onSuccess")
-                        try {
-                            val itemList = getScanResult(it)
-                            if (itemList.isNotEmpty()) {
-                                viewModelScope.launch {
-                                    val items = mutableListOf<VerificationItem>()
-                                    items.addAll(_uiState.value.listItem)
-                                    items.addAll(itemList)
-                                    scanBarcodeRes.value = true
-                                    TwoHelper.updateItems(items = items)
-                                    withContext(Dispatchers.IO) {
-                                        _uiState.update {
-                                            it.copy(
-                                                listItem = items
-                                            )
-                                        }
-                                    }
-                                }
-                            }else{
-                                analyzeReStart()
-                            }
-
-                        }catch(e:Exception){
-                            Log.e("分析失败",e.message.toString())
-                            analyzeReStart()
-                        }
-                    }
-                    .addOnFailureListener {
-                        Log.d("zzz", "onFailure")
-                        analyzeReStart()
-                    }
+                analyzeBarcode(inputImage)
             }
-
 
             task.addOnCompleteListener {
                 image.close()
@@ -152,15 +131,74 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
         }
     }
 
+    // 二维码识别
+    fun analyzeBarcode(inputImage: InputImage,select: Boolean = false): Task<out Any> {
+        return barcodeScanner.process(inputImage)
+            .addOnSuccessListener {
+                try {
+//                    if (it.size != 0) {
+                        val itemList = getScanResult(it,select)
+                        if (itemList.isNotEmpty()) {
+                            viewModelScope.launch {
+                                val items = mutableListOf<VerificationItem>()
+                                items.addAll(_uiState.value.listItem)
+                                items.addAll(itemList)
+                                scanBarcodeRes.value = true
+                                TwoHelper.updateItems(items = items)
+                                withContext(Dispatchers.IO) {
+                                    _uiState.update {
+                                        it.copy(
+                                            listItem = items
+                                        )
+                                    }
+                                }
+                            }
+//                        }
+                    } else {
+                        analyzeReStart()
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("分析失败", e.message.toString())
+                    _scanUiState.update {
+                        it.copy(
+                            openWarnDialog = true
+                        )
+                    }
+                }
+            }
+            .addOnFailureListener {
+                Log.d("zzz", "onFailure")
+                analyzeReStart()
+            }
+    }
+
+    /**
+     *  关闭警告窗
+     */
+    fun closeWarnDialog() {
+        analyzeReStart()
+        _scanUiState.update { state ->
+            state.copy(
+                openWarnDialog = false
+            )
+        }
+    }
+
+
     @Throws(GoogleAuthInfoException::class)
-    private fun getScanResult(list: List<Barcode>): List<VerificationItem> {
+    private fun getScanResult(list: List<Barcode>,select:Boolean = false): List<VerificationItem> {
+        // 设备选择
+        if (list.isEmpty() && select ){
+            throw Exception("")
+        }
         list.forEach { barcode ->
             val code = barcode.displayValue ?: ""
             code.isNotEmpty().apply {
                 val uri = Uri.parse(code)
                 try {
                     return GoogleAuth.parseUri(uri = uri)
-                }catch (e:GoogleAuthInfoException){
+                } catch (e: GoogleAuthInfoException) {
                     throw e
                 }
             }

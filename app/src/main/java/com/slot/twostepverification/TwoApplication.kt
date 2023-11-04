@@ -1,8 +1,13 @@
 package com.slot.twostepverification
 
 import android.app.Application
+import android.content.Context
+import android.graphics.Bitmap
+import android.os.Build
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import coil.Coil
+import coil.ImageLoader
 import com.slot.twostepverification.const.LOCALE
 import com.slot.twostepverification.const.languageEN
 import com.slot.twostepverification.const.locales
@@ -25,5 +30,21 @@ class TwoApplication:Application() {
         // 初始化 datastore-preferences
         DataStoreUtils.init(applicationContext)
         localeState.value = locales.getValue(DataStoreUtils.getSyncData(LOCALE, "简体中文"))
+        initCoil(context = this)
+    }
+
+    /**
+     * 初始化图片选择引擎
+     */
+    private fun initCoil(context: Context) {
+        val imageLoader = ImageLoader.Builder(context = context)
+            .crossfade(enable = false)
+            .allowHardware(enable = true)
+            .bitmapConfig(bitmapConfig = Bitmap.Config.RGB_565)
+            .components {
+
+            }
+            .build()
+        Coil.setImageLoader(imageLoader)
     }
 }
