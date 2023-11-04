@@ -44,7 +44,6 @@ import com.slot.twostepverification.ui.config.locale.localeSelector
 import com.slot.twostepverification.ui.theme.ThemeDialog
 
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview()
 @Composable
@@ -58,7 +57,7 @@ fun ConfigScreen(
     val titleStyle = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Normal)
     val ubTitleStyle = TextStyle(fontSize = 14.sp)
     val configUiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var securityChecked by remember { mutableStateOf(false) }
+    val securityChecked by remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier.systemBarsPadding(),
         topBar = {

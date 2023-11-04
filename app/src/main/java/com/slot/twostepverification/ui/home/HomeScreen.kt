@@ -1,6 +1,7 @@
 package com.slot.twostepverification.ui.home
 
 import android.util.Log
+import android.widget.EditText
 import android.widget.Toast
 import androidx.compose.animation.core.InfiniteRepeatableSpec
 import androidx.compose.animation.core.LinearEasing
@@ -25,10 +26,12 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -36,8 +39,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberTopAppBarState
@@ -58,15 +63,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.R
 import com.slot.twostepverification.const.TOTP_TIME
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.ui.home.components.ListItemView
+import com.slot.twostepverification.utils.showToast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -76,6 +85,7 @@ fun HomeScreen(
     onNavigateToConfig: () -> Unit = {},
     onNavigateToScan: () -> Unit = {},
 ) {
+    val ctx = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val homeListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
@@ -109,6 +119,7 @@ fun HomeScreen(
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded
     )
+    var openUriSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.getListItem()
@@ -139,6 +150,7 @@ fun HomeScreen(
                 },
             )
         },
+        // 底部功能弹窗控制
         floatingActionButton = {
             Button(
                 onClick = {
@@ -165,6 +177,43 @@ fun HomeScreen(
             }
         }
     }
+    // 导入url弹窗
+    if (openUriSheet) {
+        var value by remember { mutableStateOf("") }
+        AlertDialog(
+            title = {
+                Text(locale("Import_from_URI"))
+            },
+            text = {
+                OutlinedTextField(
+                    value = value,
+                    onValueChange = { value = it },
+                    maxLines = 1,
+                    modifier = Modifier.padding(10.dp),
+                    placeholder = {
+                        Text(locale("URI_Link"))
+                    },
+                )
+            },
+            onDismissRequest = {
+                openUriSheet = false
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    // 关闭dialog
+                    openUriSheet = false
+                    val res = viewModel.importUrl(value)
+                    showToast(context = ctx, text = res)
+                }) {
+                    Text(
+                        text = locale("Import"),
+                        style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Normal)
+                    )
+                }
+            }
+        )
+    }
+    // 底部功能弹窗
     if (openBottomSheet) {
         val windowInsets =
             if (edgeToEdgeEnabled) WindowInsets(0) else BottomSheetDefaults.windowInsets
@@ -209,7 +258,9 @@ fun HomeScreen(
                 }
                 Card(
                     onClick = {
-                        Toast.makeText(context, "11", Toast.LENGTH_SHORT).show()
+                        openBottomSheet = !openBottomSheet
+                        openUriSheet = !openUriSheet
+
                     }
                 ) {
                     ListItem(

@@ -141,7 +141,7 @@ val languageCN: Map<String, String> = mapOf(
     "Third_Party_Disclaimer" to "第三方声明",
     "Import_from_URI" to "从 URI 导入",
     "URI_Link" to "网址链接",
-    "Import" to "进口",
+    "Import" to "导入",
     "Notice_valid_data" to "您导入的 URI 链接不包含有效数据。",
     "Add_New_Item" to "添加新项目",
     "Save" to "保存",
