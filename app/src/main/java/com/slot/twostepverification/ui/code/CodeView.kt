@@ -38,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -94,7 +93,7 @@ fun CodeView(
         },
     ) {
         // todo:切换按钮+输入信息
-        switchButton()
+        SwitchButton()
         FloatingActionButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -193,10 +192,9 @@ fun CollapsingToolbarScope.MyToolBar(
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Preview
 @Composable
-fun switchButton() {
+fun SwitchButton() {
     var selectType by remember { mutableStateOf(VerifyType.totp) }
     val scrollState = rememberScrollState()
     Column(
@@ -222,14 +220,14 @@ fun switchButton() {
             }
         }
         Spacer(modifier = Modifier.height(18.dp))
-        otpView(selectType)
+        OtpView(selectType)
 
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun otpView(
+fun OtpView(
     type: VerifyType = VerifyType.totp, viewModel: CodeViewModel = viewModel(),
 ) {
     var expanded by remember { mutableStateOf(false) }

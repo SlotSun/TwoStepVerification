@@ -1,10 +1,6 @@
 package com.slot.twostepverification.ui.code
 
-import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.data.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
 import com.slot.twostepverification.utils.encoding.Base32
@@ -15,7 +11,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 
 data class CodeViewState(
@@ -93,17 +88,17 @@ class CodeViewModel : BaseViewModel() {
     }
 
     private fun verify():Boolean {
-        var valid:Boolean = false
+        var valid = false
         viewModelScope.launch {
             nameControllerState.update {
-                val isError = if (uiState.value.name == "") true else false
+                val isError = uiState.value.name == ""
                 valid = !isError
                 it.copy(
                     isError = isError
                 )
             }
             vindorControllerState.update {
-                val isError = if (uiState.value.vindor == "") true else false
+                val isError = uiState.value.vindor == ""
                 it.copy(
                     isError = isError
                 )
