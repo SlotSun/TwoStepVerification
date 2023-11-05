@@ -262,16 +262,19 @@ fun OtpView(
     Row {
 
         if (type == VerifyType.totp) {
+            var value by remember { mutableStateOf(uiState.time.toString()) }
             CtrTextField(
                 modifier = Modifier
                     .padding(10.dp)
                     .weight(0.5f),
-                str = uiState.time.toString(),
+                str = value,
                 label = locale("Time_Interval"),
                 controller = timeTxController,
                 onValueChange = {
                     // 对数据进行过滤
-                    uiState.time = it.filter { it.isDigit() }.toInt()
+                    val str = it.filter { it.isDigit() }
+                    value = str
+                    uiState.time = if (str != "") str.toInt() else 0 //debug:删除为空
                 },
             )
         } else {
@@ -284,7 +287,8 @@ fun OtpView(
                 controller = timeTxController,
                 onValueChange = {
                     // 对数据进行过滤
-                    uiState.count = it.filter { it.isDigit() }.toInt()
+                    val str = it.filter { it.isDigit() }
+                    uiState.count = if (str != "") str.toInt() else 0 //debug:删除为空
                 },
             )
         }
