@@ -84,6 +84,9 @@ protobuf {
 
 
 dependencies {
+    // 可折叠标题栏
+    implementation "me.onebone:toolbar-compose:2.3.5"
+
     api(libs.kotlinx.coroutines)
     api(libs.gson)
 

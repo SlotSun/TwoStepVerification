@@ -25,10 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -37,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.slot.twostepverification.R
 import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.ui.config.locale.localeSelector
@@ -97,7 +94,7 @@ fun ConfigScreen(
                 elevation = 0.dp
             ) {
                 Text(
-                    text = localeState.value.getValue("appearance"),
+                    text = locale("appearance"),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -105,13 +102,13 @@ fun ConfigScreen(
                 modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
                 headlineContent = {
                     Text(
-                        text = localeState.value.getValue("dynamic_color"),
+                        text = locale("dynamic_color"),
                         style = titleStyle
                     )
                 },
                 supportingContent = {
                     Text(
-                        text = localeState.value.getValue("follow_system_desktop_for_theme_color"),
+                        text = locale("follow_system_desktop_for_theme_color"),
                         style = ubTitleStyle
                     )
                 },
@@ -135,13 +132,13 @@ fun ConfigScreen(
                         ),
                     headlineContent = {
                         Text(
-                            text = localeState.value.getValue("select_color"),
+                            text = locale("select_color"),
                             style = titleStyle
                         )
                     },
                     supportingContent = {
                         Text(
-                            text = localeState.value.getValue("manually_select_a_color_as_seed"),
+                            text = locale("manually_select_a_color_as_seed"),
                             style = ubTitleStyle
                         )
                     },
@@ -149,8 +146,8 @@ fun ConfigScreen(
             }
 
             configItem(
-                title = localeState.value.getValue("Switch_Language"),
-                ubTitle = localeState.value.getValue("The_default_setting_is_usually_fine")
+                title = locale("Switch_Language"),
+                ubTitle = locale("The_default_setting_is_usually_fine")
             ) {
                 viewModel.openLocaleDialog()
             }
@@ -161,7 +158,7 @@ fun ConfigScreen(
                 elevation = 0.dp
             ) {
                 Text(
-                    text = localeState.value.getValue("security_authentication"),
+                    text = locale("security_authentication"),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
@@ -169,13 +166,13 @@ fun ConfigScreen(
                 modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp),
                 headlineContent = {
                     Text(
-                        text = localeState.value.getValue("security_authentication"),
+                        text = locale("security_authentication"),
                         style = titleStyle
                     )
                 },
                 supportingContent = {
                     Text(
-                        text = localeState.value.getValue("perform_security_verification_on_startup"),
+                        text = locale("perform_security_verification_on_startup"),
                         style = ubTitleStyle
                     )
                 },
@@ -189,8 +186,8 @@ fun ConfigScreen(
                 }
             )
             configItem(
-                title = localeState.value.getValue("backup_and_restore"),
-                ubTitle = localeState.value.getValue("data_cloud_backup_to_reduce_risk_of_accidental_loss")
+                title = locale("backup_and_restore"),
+                ubTitle = locale("data_cloud_backup_to_reduce_risk_of_accidental_loss")
             ) { }
             Card(
                 modifier = Modifier
@@ -199,22 +196,22 @@ fun ConfigScreen(
                 elevation = 0.dp
             ) {
                 Text(
-                    text = localeState.value.getValue("About"),
+                    text = locale("About"),
                     color = MaterialTheme.colorScheme.primary
                 )
             }
             configItem(
-                title = localeState.value.getValue("open_source_license"),
-                ubTitle = localeState.value.getValue("no_them_no_me")
+                title = locale("open_source_license"),
+                ubTitle = locale("no_them_no_me")
             ) { onNavigateToLibs() }
             configItem(
-                title = localeState.value.getValue("project_homepage"),
-                ubTitle = localeState.value.getValue("View_Source_Code_and_find_job")
+                title = locale("project_homepage"),
+                ubTitle = locale("View_Source_Code_and_find_job")
             ) { viewModel.openGithub(ctx = ctx) }
 
             if (configUiState.openThemeDialog) {
                 ThemeDialog(
-                    dialogTitle = localeState.value.getValue("select_color"),
+                    dialogTitle = locale("select_color"),
                     onDismissRequest = { viewModel.closeThemeDialog() },
                     icon = Icons.Filled.Info
                 )

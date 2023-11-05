@@ -20,6 +20,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.slot.twostepverification.ui.code.CodeView
 import com.slot.twostepverification.ui.config.ConfigScreen
 import com.slot.twostepverification.ui.home.HomeScreen
 import com.slot.twostepverification.ui.home.HomeViewModel
@@ -83,7 +84,8 @@ fun TwoNavGraph(
         composable(TwoDestinations.MAIN_ROUTE) {
             HomeScreen(
                 onNavigateToConfig = { twoNavActions.navigateToConfig() },
-                onNavigateToScan = {twoNavActions.navigateToScan()}
+                onNavigateToScan = {twoNavActions.navigateToScan()},
+                onNavigateToCode = {twoNavActions.navigateToCode()}
             )
         }
         composable(TwoDestinations.CONFIG) {
@@ -110,6 +112,12 @@ fun TwoNavGraph(
                 onNavigateBack = { twoNavActions.popBackStackLast()}
             )
         }
+        composable(TwoDestinations.CODE) {
+            CodeView(
+                onNavigateBack = { twoNavActions.popBackStackLast()}
+
+            )
+        }
     }
 }
 
@@ -131,7 +139,10 @@ class TwoNavActions(
     val navigateToLibs: () -> Unit = {
         navigate(TwoDestinations.LIBS)
     }
-
+    // add new verification_item by user input
+    val navigateToCode:() ->Unit = {
+        navigate(TwoDestinations.CODE)
+    }
     val navigateToWebdav: () -> Unit = {
         navigate(TwoDestinations.WEBDAV)
     }
@@ -161,4 +172,5 @@ object TwoDestinations {
     const val WEBDAV = "webdav"
     const val WEBDAV_PATH = "webdav_path"
     const val SCAN = "scan"
+    const val CODE = "code"
 }

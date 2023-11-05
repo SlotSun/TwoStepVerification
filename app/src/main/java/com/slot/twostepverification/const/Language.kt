@@ -145,7 +145,7 @@ val languageCN: Map<String, String> = mapOf(
     "Notice_valid_data" to "您导入的 URI 链接不包含有效数据。",
     "Add_New_Item" to "添加新项目",
     "Save" to "保存",
-    "Name" to "姓名",
+    "Name" to "名称",
     "Service_Provider" to "服务提供者",
     "Access_Key" to "访问密钥",
     "Time_Interval" to "时间间隔",
@@ -180,5 +180,8 @@ val locales: Map<String, Map<String, String>> = mapOf(
 )
 
 inline fun locale(string: String):String{
-    return localeState.value.getValue(string)
+    return if (localeState.value.containsKey(string))
+        localeState.value.getValue(string)
+    else
+        string
 }
