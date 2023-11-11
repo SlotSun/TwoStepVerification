@@ -119,13 +119,13 @@ val languageCN: Map<String, String> = mapOf(
     "link_access_failed" to "链接访问失败",
     "color_picker" to "选色器",
     "cancel" to "取消",
-    "OK" to "好的",
+    "OK" to "确定",
     "Account" to "帐户",
     "cloud_connection_type" to "云连接类型",
-    "current_storage_location" to "当前存储位置",
+    "current_storage_location" to "当前存储于",
     "Current_Usage" to "当前使用情况",
     "Login_Account" to "登录账户",
-    "You_may_need_a_reliable_network_connection" to "您可能需要可靠的网络连接。",
+    "You_may_need_a_reliable_network_connection" to "可能需要您有可靠的网络连接。",
     "Storage_location" to "存储位置",
     "Current_storage_path" to "当前存储路径",
     "Notice_RSA" to "您的数据在存储到云端之前将使用 RSA 进行加密。不过，可以在该应用程序的源代码中找到相应的公钥和私钥。请谨慎行事并确保正确备份您的数据。",
@@ -171,7 +171,9 @@ val languageCN: Map<String, String> = mapOf(
     "sorry_dynamic_color" to "只有安卓12支持动态颜色，对不起！",
     "title_activity_language_dialog" to "语言对话框",
     "ERROR" to "出现错误",
-    "TheQRcodeisinvalid" to "无法识别图片中的有效二维码，请换一张重试"
+    "TheQRcodeisinvalid" to "无法识别图片中的有效二维码，请换一张重试",
+    "PermissionNeed" to "该功能需要此权限，请打开该权限",
+    "PermissionPlease" to "请求权限"
 
     )
 val locales: Map<String, Map<String, String>> = mapOf(

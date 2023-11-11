@@ -192,7 +192,6 @@ fun CollapsingToolbarScope.MyToolBar(
     )
 }
 
-@Preview
 @Composable
 fun SwitchButton() {
     var selectType by remember { mutableStateOf(VerifyType.totp) }
@@ -246,7 +245,6 @@ fun OtpView(
             uiState.name = it
         }
     )
-
     CtrTextField(
         label = locale("Service_Provider"),
         controller = vindorTxController,
@@ -350,6 +348,4 @@ fun OtpView(
 //            WindowInsets.systemBars
 //        )
 //    )
-
-
 }

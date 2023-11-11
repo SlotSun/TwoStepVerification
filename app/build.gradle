@@ -31,6 +31,9 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/INDEX.LIST'
+    }
     buildTypes {
 
         debug {
@@ -55,6 +58,7 @@ android {
         jvmTarget = '17'
     }
     buildFeatures {
+        buildConfig true
         compose true
     }
     composeOptions {
@@ -84,19 +88,33 @@ protobuf {
 
 
 dependencies {
+
+
+    // Splitties：简化kotlin代码的库
+    implementation("com.louiscad.splitties:splitties-appctx:3.0.0")
+    implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")
+    implementation("com.louiscad.splitties:splitties-views:3.0.0")
+
+    // WEBDAV
+    implementation 'com.github.bitfireAT:dav4jvm:2.2.1'
+
     // 可折叠标题栏
     implementation "me.onebone:toolbar-compose:2.3.5"
 
+    // 协程
     api(libs.kotlinx.coroutines)
-    api(libs.gson)
 
     // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
     implementation 'org.bouncycastle:bcprov-jdk18on:1.76'
 
+    //规则相关
+    implementation('org.jsoup:jsoup:1.16.1')
+    implementation('com.jayway.jsonpath:json-path:2.8.0')
+    implementation('cn.wanghaomiao:JsoupXpath:2.5.3')
 
     //Material Icons
-    implementation "androidx.compose.material:material-icons-core:1.5.4"
-    implementation "androidx.compose.material:material-icons-extended:1.5.4"
+    implementation libs.androidx.material.icons.core
+    implementation libs.androidx.material.icons.extended
     // mlkit
     implementation libs.mlkit.barcode.scanning
     implementation libs.mlkit.text.recognition
@@ -112,27 +130,32 @@ dependencies {
     implementation libs.androidx.camera.camera.lifecycle2
     implementation libs.androidx.camera.camera.view2
     // 解析验证码
-    implementation 'com.eatthepath:java-otp:0.4.0'
+    implementation libs.eatthepath.java.otp
     // 网络请求
     implementation libs.retrofit
     implementation libs.okhttp
     implementation libs.okhttp.logging
-    // data
+
+    // data room
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+    implementation libs.androidx.preference.ktx
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
 
     //google
     implementation libs.guava
     implementation libs.google.protobuf.javalite
+    implementation libs.gson
 
+    // jetpack material3 compose
+    implementation libs.androidx.compose.material
+    implementation libs.androidx.material3
     implementation libs.accompanist.systemuicontroller
     implementation libs.androidx.navigation.compose
     implementation libs.core.ktx
     implementation libs.appcompat
-    implementation libs.androidx.compose.material
     implementation libs.constraintlayout
     implementation libs.lifecycle.runtime.ktx
     implementation libs.activity.compose
@@ -142,16 +165,21 @@ dependencies {
     implementation libs.ui.tooling.preview
     implementation libs.androidx.lifecycle.runtime.compose
     implementation libs.androidx.foundation.android
-    implementation libs.androidx.material3
+
     implementation platform(libs.compose.bom)
     implementation platform(libs.compose.bom)
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.test.ext.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation platform(libs.compose.bom)
-    androidTestImplementation libs.ui.test.junit4
     androidTestImplementation platform(libs.compose.bom)
     androidTestImplementation platform(libs.compose.bom)
     debugImplementation libs.ui.tooling
     debugImplementation libs.ui.test.manifest
+
+    //加解密类库
+    //noinspection GradleDependency,GradlePackageUpdate
+    implementation('cn.hutool:hutool-crypto:5.8.21')
+    // test
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.ui.test.junit4
 }

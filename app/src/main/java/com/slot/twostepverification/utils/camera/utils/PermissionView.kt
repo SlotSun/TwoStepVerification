@@ -12,20 +12,21 @@ import androidx.compose.runtime.Composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
+import com.slot.twostepverification.const.locale
 
 
 /*
  * 权限请求
  * 
- * @author: zhhli
- * @date: 22/7/26
+ * @author: Slot
+ * @date: 2023/11/01
  */
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun PermissionView(
     permission: String = android.Manifest.permission.CAMERA,
-    rationale: String = "该功能需要此权限，请打开该权限。",
+    rationale: String = locale("PermissionNeed"),
     permissionNotAvailableContent: @Composable () -> Unit = { },
     content: @Composable () -> Unit = { }
 ) {
@@ -51,14 +52,14 @@ private fun Rationale(
     AlertDialog(
         onDismissRequest = { /* Don't */ },
         title = {
-            Text(text = "请求权限")
+            Text(text = locale("PermissionPlease"))
         },
         text = {
             Text(text)
         },
         confirmButton = {
             TextButton(onClick = onRequestPermission) {
-                Text("确定")
+                Text(locale("OK"))
             }
         }
     )

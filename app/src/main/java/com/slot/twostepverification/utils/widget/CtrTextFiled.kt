@@ -33,7 +33,7 @@ fun CtrTextField(
     modifier: Modifier = Modifier.padding(10.dp).fillMaxWidth(),
     str: String = "",
     label: String = "",
-    controller: TextFieldController,
+    controller: TextFieldController = TextFieldController(),
     onValueChange: (value: String) -> Unit,
     onKeyboardActions:()->Unit ={}
 ) {

@@ -37,6 +37,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.locale
+import com.slot.twostepverification.const.titleStyle
+import com.slot.twostepverification.const.ubTitleStyle
 import com.slot.twostepverification.ui.config.locale.localeSelector
 import com.slot.twostepverification.ui.theme.ThemeDialog
 
@@ -51,8 +53,7 @@ fun ConfigScreen(
     onPopBackStackToMain: () -> Unit = {},
 ) {
     val ctx = LocalContext.current
-    val titleStyle = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Normal)
-    val ubTitleStyle = TextStyle(fontSize = 14.sp)
+
     val configUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val securityChecked by remember { mutableStateOf(false) }
     Scaffold(

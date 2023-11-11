@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.camera.utils.ImageUtils
 import com.slot.twostepverification.utils.camera.utils.PermissionView
 import com.slot.twostepverification.utils.camera.utils.openSettingsPermission
@@ -71,10 +72,10 @@ fun CameraViewPermission(
 
     PermissionView(
         permission = Manifest.permission.CAMERA,
-        rationale = "请打开相机权限",
+        rationale = locale("PermissionNeed"),
         permissionNotAvailableContent = {
             Column(modifier) {
-                Text("未能获取相机")
+                Text("未能获取相机权限")
                 Spacer(modifier = Modifier.height(8.dp))
                 TextButton(
                     onClick = {

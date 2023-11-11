@@ -1,15 +1,18 @@
 package com.slot.twostepverification.ui.theme
 
 import android.app.Activity
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.slot.twostepverification.const.DYNAMIC_COLOR
@@ -47,7 +50,24 @@ val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHR
 val dynamicColorState: MutableState<Boolean> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
     mutableStateOf(DataStoreUtils.getSyncData(DYNAMIC_COLOR,true))
 }
-
+@Composable
+fun getCurrentColors(): ColorScheme {
+    val ctx = LocalContext.current
+    val themeType = themeTypeState.value
+    val dy = dynamicColorState.value
+    val colorScheme = if (dy && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        dynamicLightColorScheme(context = ctx)
+    } else {
+        //如果系统小于安卓12 关闭动态取色
+        dynamicColorState.value = false
+        if (isSystemInDarkTheme()) {
+            playDarkColors()
+        } else {
+            getThemeForThemeId(themeType)
+        }
+    }
+    return colorScheme
+}
 
 fun getDefaultThemeId(): Int {
     return 4
@@ -82,50 +102,34 @@ fun TwoStepVerificationTheme(
  */
 fun getThemeForThemeId(themeId: Int) = when (themeId) {
     SKY_BLUE_THEME -> {
-        playLightColors(
-            primary = primaryLight
-        )
+        purpleTheme()
     }
 
     GRAY_THEME -> {
-        playLightColors(
-            primary = gray_theme
-        )
+        purpleTheme()
     }
 
     GREEN_THEME -> {
-        playLightColors(
-            primary = green_theme
-        )
+        greenTheme()
     }
 
     PURPLE_THEME -> {
-        playLightColors(
-            primary = purple_theme,
-        )
+        purpleTheme()
     }
 
     ORANGE_THEME -> {
-        playLightColors(
-            primary = orange_theme
-        )
+        purpleTheme()
     }
 
     CYAN_THEME -> {
-        playLightColors(
-            primary = cyan_theme
-        )
+        purpleTheme()
     }
 
     MAGENTA_THEME -> {
-        playLightColors(
-            primary = magenta_theme
-        )
+        purpleTheme()
     }
 
     else -> {
-        playLightColors(
-            primary = primaryLight
-        )
+        purpleTheme()
     }
 }

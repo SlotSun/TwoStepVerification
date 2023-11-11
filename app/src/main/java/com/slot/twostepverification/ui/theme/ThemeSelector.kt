@@ -39,7 +39,7 @@ data class ThemeModel(val color: Color, val colorId: Int, val colorName: String)
 
 // 主题model列表
 private val themeList = arrayListOf(
-    ThemeModel(primaryLight, SKY_BLUE_THEME, "天蓝色"),
+    ThemeModel(select_theme, SKY_BLUE_THEME, "天蓝色"),
     ThemeModel(gray_theme, GRAY_THEME, "灰色"),
     ThemeModel(green_theme, GREEN_THEME, "绿色"),
     ThemeModel(purple_theme, PURPLE_THEME, "紫色"),

@@ -26,7 +26,9 @@ class TwoApplication:Application() {
 
     override fun onCreate() {
         super.onCreate()
-        setBaseUrl("https://pub.dev/packages/")
+        // 初始化okHttp
+        // 不设置不行
+        setBaseUrl("https://www.baidu.com")
         setHttpClient(OkHelper.httpClient(applicationContext))
         // 初始化 datastore-preferences
         DataStoreUtils.init(applicationContext)

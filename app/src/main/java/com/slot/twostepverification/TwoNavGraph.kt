@@ -26,6 +26,8 @@ import com.slot.twostepverification.ui.home.HomeScreen
 import com.slot.twostepverification.ui.home.HomeViewModel
 import com.slot.twostepverification.ui.libs.LibsDetailScreen
 import com.slot.twostepverification.ui.libs.LibsScreen
+import com.slot.twostepverification.ui.nav.NavScreen
+import com.slot.twostepverification.ui.nav.webdav.WebDavView
 import com.slot.twostepverification.ui.scan.ScanView
 
 @Composable
@@ -84,8 +86,8 @@ fun TwoNavGraph(
         composable(TwoDestinations.MAIN_ROUTE) {
             HomeScreen(
                 onNavigateToConfig = { twoNavActions.navigateToConfig() },
-                onNavigateToScan = {twoNavActions.navigateToScan()},
-                onNavigateToCode = {twoNavActions.navigateToCode()}
+                onNavigateToScan = { twoNavActions.navigateToScan() },
+                onNavigateToCode = { twoNavActions.navigateToCode() }
             )
         }
         composable(TwoDestinations.CONFIG) {
@@ -109,15 +111,36 @@ fun TwoNavGraph(
         }
         composable(TwoDestinations.SCAN) {
             ScanView(
-                onNavigateBack = { twoNavActions.popBackStackLast()}
+                onNavigateBack = { twoNavActions.popBackStackLast() }
             )
         }
         composable(TwoDestinations.CODE) {
             CodeView(
-                onNavigateBack = { twoNavActions.popBackStackLast()}
+                onNavigateBack = { twoNavActions.popBackStackLast() }
+            )
+        }
+        composable(TwoDestinations.NAV) {
+            NavScreen(
+                onNavigateToWebDav = {
+                    twoNavActions.navigateToWebdav()
+                },
+                onPopBackStack = { twoNavActions.popBackStackLast() }
+            )
+        }
+        composable(TwoDestinations.WEBDAV) {
+            WebDavView(
+                onPopBackStack = {
+                    twoNavActions.popBackStackLast()
+                }
+            )
+        }
+        composable(TwoDestinations.CODE) {
+            CodeView(
+                onNavigateBack = { twoNavActions.popBackStackLast() }
 
             )
         }
+
     }
 }
 
@@ -139,9 +162,15 @@ class TwoNavActions(
     val navigateToLibs: () -> Unit = {
         navigate(TwoDestinations.LIBS)
     }
+
     // add new verification_item by user input
-    val navigateToCode:() ->Unit = {
+    val navigateToCode: () -> Unit = {
         navigate(TwoDestinations.CODE)
+    }
+
+    // 云备份
+    val navigateToNav: () -> Unit = {
+        navigate(TwoDestinations.NAV)
     }
     val navigateToWebdav: () -> Unit = {
         navigate(TwoDestinations.WEBDAV)
@@ -173,4 +202,5 @@ object TwoDestinations {
     const val WEBDAV_PATH = "webdav_path"
     const val SCAN = "scan"
     const val CODE = "code"
+    const val NAV = "nav"
 }
