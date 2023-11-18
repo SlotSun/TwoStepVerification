@@ -168,6 +168,7 @@ class CoroutineHttp private constructor() {
         }
     }
 
+
     suspend fun <T : HttpResponse> post(
         request: HttpRequest,
         type: Class<T>,
@@ -188,6 +189,7 @@ class CoroutineHttp private constructor() {
         }
     }
 
+    // form
     suspend fun <T : HttpResponse> form(
         request: HttpRequest,
         type: Class<T>,
@@ -231,6 +233,7 @@ class CoroutineHttp private constructor() {
         }
     }
 
+
     private fun <T : HttpResponse> buildResponse(code: String, msg: String, type: Class<T>): T {
         val json = """
             {
@@ -266,6 +269,7 @@ interface ApiService {
         @HeaderMap header: Map<String, String>,
         @FieldMap params: Map<String, String>
     ): ResponseBody
+
 
     @GET
     suspend fun get(

@@ -3,6 +3,7 @@ package com.slot.twostepverification.const
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.slot.twostepverification.data.entity.Authorization
 
 
 const val APP_TAG = "TwoStepV"
@@ -25,6 +26,10 @@ val charsets =
 const val USER_AGENT= "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
 val titleStyle = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Normal)
 val ubTitleStyle = TextStyle(fontSize = 14.sp)
+
+// webdav
+const val AUTH_IS_OK = "authIsOk"
+const val AUTHORIZATION = "Authorization"
 
 
 

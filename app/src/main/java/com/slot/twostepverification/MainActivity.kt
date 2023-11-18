@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
                         dynamicColor = false
                     ) {
                         val navController = rememberNavController()
-                        val startDestination = TwoDestinations.NAV
+                        val startDestination = TwoDestinations.MAIN_ROUTE
                         TwoNavGraph(navController, startDestination)
                     }
                 }

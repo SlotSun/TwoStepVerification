@@ -11,6 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -26,7 +28,7 @@ data class TextFieldController(
  *  @param label TextField的标签
  *  @param controller TextField的控制器
  *  @param onValueChange 当TextField输入数值变化时进行操作
- *
+ *  @param visualTransformation 是否密码化输入文本
  */
 @Composable
 fun CtrTextField(
@@ -35,10 +37,13 @@ fun CtrTextField(
     label: String = "",
     controller: TextFieldController = TextFieldController(),
     onValueChange: (value: String) -> Unit,
-    onKeyboardActions:()->Unit ={}
+    onKeyboardActions:()->Unit ={},
+    visualTransformation:VisualTransformation = VisualTransformation.None,
+
 ) {
     var value by remember { mutableStateOf(str) }
     OutlinedTextField(
+        visualTransformation = visualTransformation,
         modifier = modifier,
         value = value,
         label = { Text(text = if (controller.isError) "$label*" else label) },

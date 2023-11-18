@@ -14,5 +14,4 @@ data class VerificationItem(
     val sha:String? = "SHA1",
     val counter:Int? = 0,
     val used:Int? = 0
-):Parcelable {
-}
+):Parcelable

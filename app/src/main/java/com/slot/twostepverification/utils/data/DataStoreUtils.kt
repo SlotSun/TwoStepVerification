@@ -20,6 +20,9 @@ import okio.IOException
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "PlayAndroidDataStore")
 
+/**
+ *  简单的 preferences 存储
+ */
 object DataStoreUtils {
 
     private lateinit var dataStore: DataStore<Preferences>

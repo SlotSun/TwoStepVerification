@@ -3,6 +3,7 @@ package com.slot.twostepverification.ui.libs
 import androidx.lifecycle.viewModelScope
 import com.slot.twostepverification.utils.https.get
 import com.slot.twostepverification.viewmodel.BaseViewModel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +28,7 @@ class LibDetailViewModel: BaseViewModel() {
             it.copy(isLoading = true)
         }
         viewModelScope.launch {
+            // 单例模式
             val response = get("https://pub.dev/packages/$lib/license")
             var msg = lisRegex.find(response)?.value
             if (msg == null){
@@ -40,6 +42,11 @@ class LibDetailViewModel: BaseViewModel() {
             }
         }
 
+    }
+
+    // 组件结束时候，取消协程内的任务
+    override fun onCleared() {
+        viewModelScope.cancel()
     }
 
 }

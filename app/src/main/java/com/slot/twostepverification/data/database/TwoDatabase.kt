@@ -17,7 +17,7 @@ import kotlinx.coroutines.withContext
  * 对RoomDatabase进行封装
  */
 @Database(entities = [Two::class], version = 1, exportSchema = false)
-abstract class TwoDatabase:RoomDatabase() {
+abstract class TwoDatabase : RoomDatabase() {
     companion object {
         @Volatile
         private var database: TwoDatabase? = null
@@ -33,6 +33,11 @@ abstract class TwoDatabase:RoomDatabase() {
         @JvmStatic
         fun set(key: String, value: String) {
             getDB().setValue(key, value)
+        }
+
+
+        suspend fun del(key: String): Boolean {
+            return getDB().delValue(key = key)
         }
 
 
@@ -52,8 +57,7 @@ abstract class TwoDatabase:RoomDatabase() {
     }
 
 
-
-    abstract fun getDao():TwoDao
+    abstract fun getDao(): TwoDao
 
 
     // 在外部处理后（包括删除） 插入
@@ -73,6 +77,20 @@ abstract class TwoDatabase:RoomDatabase() {
             }
         }
     }
+    // 清空
+    suspend fun delValue(key: String): Boolean {
+        return try {
+            val two = getDao().findByKey(key)
+            if (two == null) {
+                false
+            } else {
+                getDao().delete(two)
+                true
+            }
+        } catch (e: Exception) {
+            false
+        }
+    }
 
     suspend fun getValue(key: String): String {
         return try {
@@ -81,6 +99,7 @@ abstract class TwoDatabase:RoomDatabase() {
             ""
         }
     }
+
     fun getValue(key: String, result: (String) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             val value = try {

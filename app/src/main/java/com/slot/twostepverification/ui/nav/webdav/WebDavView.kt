@@ -13,21 +13,54 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.slot.twostepverification.ui.components.LoadingContent
 import com.slot.twostepverification.utils.widget.CtrTextField
 
+@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebDavView(
-    onPopBackStack: () -> Unit,
+    viewModel: WebDavViewModel = viewModel(),
+    onPopBackStack: () -> Unit = {},
 ) {
+    val ctx = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    SideEffect() {
+        if (uiState.isLogin) {
+            onPopBackStack()
+        }
+    }
+
+    LaunchedEffect(uiState.message, snackbarHostState) {
+        if (uiState.message.isNotBlank()) {
+            snackbarHostState.showSnackbar(uiState.message)
+            viewModel.resetMessage()
+        }
+    }
     Scaffold(
+
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -54,29 +87,58 @@ fun WebDavView(
         },
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = {},
+                onClick = {
+                    viewModel.loginWebDav()
+                },
                 icon = { Icon(Icons.Filled.AddLink, "Localized Description") },
                 text = { Text(text = "Login") },
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data
+                )
+            }
+        },
+        content = { innerPadding ->
+            LoadingContent(
+                isLoading = uiState.isLoading,
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                Column {
+                    // webDav地址：默认坚果云
+                    CtrTextField(
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                            .fillMaxWidth(),
+                        label = "链接地址",
+                        onValueChange = {
+                            viewModel.updateDomain(domain = it)
+                        }
+                    )
+                    // WEBDAV 用户名
+                    CtrTextField(
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                            .fillMaxWidth(),
+                        label = "用户名",
+                        onValueChange = {
+                            viewModel.updateUser(user = it)
+                        }
+                    )
+                    CtrTextField(
+                        modifier = Modifier
+                            .padding(start = 10.dp, end = 10.dp)
+                            .fillMaxWidth(),
+                        label = "密码",
+                        onValueChange = {
+                            viewModel.updatePassword(it)
+                        },
+                        visualTransformation = PasswordVisualTransformation(mask = '\u2022')
+                    )
+                }
+            }
         }
-
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            CtrTextField(
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp).fillMaxWidth(),
-                label = "链接地址",
-                onValueChange = {}
-            )
-            CtrTextField(
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp).fillMaxWidth(),
-                label = "用户名",
-                onValueChange = {}
-            )
-            CtrTextField(
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp).fillMaxWidth(),
-                label = "密码",
-                onValueChange = {}
-            )
-        }
-    }
+    )
 }

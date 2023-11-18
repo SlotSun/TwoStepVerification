@@ -93,7 +93,7 @@ fun TwoNavGraph(
         composable(TwoDestinations.CONFIG) {
             ConfigScreen(
                 onNavigateToLibs = { twoNavActions.navigateToLibs() },
-                onNavigateToBackup = { twoNavActions.navigateToConfig() },
+                onNavigateToBackup = { twoNavActions.navigateToNav() },
                 onPopBackStackToMain = { twoNavActions.popBackStack(TwoDestinations.MAIN_ROUTE) }
             )
         }

@@ -186,10 +186,13 @@ fun ConfigScreen(
                     )
                 }
             )
+            // 跳转备份
             configItem(
                 title = locale("backup_and_restore"),
                 ubTitle = locale("data_cloud_backup_to_reduce_risk_of_accidental_loss")
-            ) { }
+            ) {
+                onNavigateToBackup()
+            }
             Card(
                 modifier = Modifier
                     .padding(vertical = 12.dp, horizontal = 16.dp)
