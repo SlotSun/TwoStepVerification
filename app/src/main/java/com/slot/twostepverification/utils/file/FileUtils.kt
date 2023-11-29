@@ -1,8 +1,12 @@
-package com.slot.twostepverification.utils
+package com.slot.twostepverification.utils.file
 
 import android.os.Environment
 import android.webkit.MimeTypeMap
 import androidx.annotation.IntDef
+import com.slot.twostepverification.utils.ConvertUtils
+import com.slot.twostepverification.utils.cnCompare
+import com.slot.twostepverification.utils.externalCache
+import com.slot.twostepverification.utils.log.printOnDebug
 import splitties.init.appCtx
 import java.io.*
 import java.nio.charset.Charset
