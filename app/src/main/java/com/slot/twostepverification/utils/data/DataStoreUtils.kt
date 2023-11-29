@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import okio.IOException
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "PlayAndroidDataStore")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "TSVDataStore")
 
 /**
  *  简单的 preferences 存储
