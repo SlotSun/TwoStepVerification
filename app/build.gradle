@@ -175,6 +175,9 @@ dependencies {
     debugImplementation libs.ui.tooling
     debugImplementation libs.ui.test.manifest
 
+    //androidx
+    implementation(libs.androidx.activity.ktx)
+
     //加解密类库
     //noinspection GradleDependency,GradlePackageUpdate
     implementation('cn.hutool:hutool-crypto:5.8.21')
