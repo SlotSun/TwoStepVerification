@@ -84,8 +84,10 @@ val languageEN: Map<String, String> = mapOf(
     "Long_press_to_switch_output_directory" to "Long press to switch output directory",
     "sorry_dynamic_color" to "Only Android 12 support dynamic color,Sorry!",
     "title_activity_language_dialog" to "LanguageDialog",
-    "ERROR" to "出现错误",
-    "TheQRcodeisinvalid" to "The valid QR code in the picture cannot be recognized, please try again with another one"
+    "ERROR" to "Error",
+    "TheQRcodeisinvalid" to "The valid QR code in the picture cannot be recognized, please try again with another one",
+    "FailToAuthorizeWebDav" to "Fail to authorize WebDav application"
+
 )
 
 
@@ -173,15 +175,16 @@ val languageCN: Map<String, String> = mapOf(
     "ERROR" to "出现错误",
     "TheQRcodeisinvalid" to "无法识别图片中的有效二维码，请换一张重试",
     "PermissionNeed" to "该功能需要此权限，请打开该权限",
-    "PermissionPlease" to "请求权限"
+    "PermissionPlease" to "请求权限",
+    "FailToAuthorizeWebDav" to "登录WebDav失败"
 
-    )
+)
 val locales: Map<String, Map<String, String>> = mapOf(
     "English" to languageEN,
     "简体中文" to languageCN
 )
 
-inline fun locale(string: String):String{
+inline fun locale(string: String): String {
     return if (localeState.value.containsKey(string))
         localeState.value.getValue(string)
     else
