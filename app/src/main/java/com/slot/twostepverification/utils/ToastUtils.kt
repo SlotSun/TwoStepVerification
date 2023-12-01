@@ -17,3 +17,15 @@ fun showToast(context: Context?, text: String?) {
         }
     }
 }
+
+fun Context.showToasts(text: String?) {
+    if (TextUtils.isEmpty(text)) return
+    if (Thread.currentThread() === Looper.getMainLooper().thread) {
+        val toast = Toast.makeText(this, text, Toast.LENGTH_SHORT)
+        toast.show()
+    } else {
+        Handler(this.mainLooper).post {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+}
