@@ -1,6 +1,7 @@
 package com.slot.twostepverification.utils.data
 
 import android.content.Context
+import android.net.Uri
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -34,6 +35,9 @@ object DataStoreUtils {
     fun init(context: Context) {
         dataStore = context.dataStore
     }
+
+
+
 
     @Suppress("UNCHECKED_CAST")
     fun <U> getSyncData(key: String, default: U): U {
@@ -251,6 +255,7 @@ object DataStoreUtils {
             it.clear()
         }
     }
+
 
     fun clearSync() {
         runBlocking {

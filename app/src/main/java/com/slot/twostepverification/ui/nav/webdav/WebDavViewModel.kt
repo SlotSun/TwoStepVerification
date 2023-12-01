@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.slot.twostepverification.const.AUTH_IS_OK
+import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.data.TwoHelper
 import com.slot.twostepverification.data.TwoHelper.getAuth
 import com.slot.twostepverification.data.entity.Authorization
@@ -36,16 +37,10 @@ class WebDavViewModel : ViewModel() {
 
 
     init {
-        authIsOK = DataStoreUtils.readBooleanData(AUTH_IS_OK)
-//        runBlocking {
-//            if (authIsOK) {
-//                getAuth()?.let {
-//                    domain = it.url
-//                    user = it.username
-//                    password = it.password
-//                }
-//            }
-//        }
+        authIsOK = LocalConfig.isWebDavLogin
+        domain = LocalConfig.webDavUrl
+        user = LocalConfig.user
+        password = LocalConfig.password
     }
 
     private fun getAuthHandler(): Authorization {
@@ -61,19 +56,19 @@ class WebDavViewModel : ViewModel() {
      */
     // 调用webdav 登录接口
     fun loginWebDav() {
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             _webDavUiState.update {
                 it.copy(message = "用户名不能为空")
             }
             return
         }
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             _webDavUiState.update {
                 it.copy(message = "密码不能为空")
             }
             return
         }
-        if (domain.isEmpty()){
+        if (domain.isEmpty()) {
             _webDavUiState.update {
                 it.copy(message = "网络地址不能为空")
             }
@@ -104,14 +99,18 @@ class WebDavViewModel : ViewModel() {
                 Log.e("WEBDAV_LOGIN", "${it.message}")
             }
             if (authIsOK) {
-                // 记录是否登录成功
-                DataStoreUtils.putData(AUTH_IS_OK, authIsOK)
                 //登录成功 添加到数据库
+                LocalConfig.password = password
+                LocalConfig.user = user
+                LocalConfig.webDavUrl = domain
                 TwoHelper.updateAuth(auth)
-            }else{
+
+            } else {
                 // 改动后失败删除
                 TwoHelper.delAuth()
             }
+            // 记录是否登录成功
+            LocalConfig.isWebDavLogin = authIsOK
             _webDavUiState.update {
                 it.copy(
                     isLogin = authIsOK,
@@ -123,20 +122,6 @@ class WebDavViewModel : ViewModel() {
         // 跳转回上一页
     }
 
-    /**
-     *  选择备份路径
-     */
-    fun selectFilePath(){
-
-    }
-
-    /**
-     *  开始备份
-     */
-
-    fun backUp(){
-
-    }
 
     fun updateDomain(domain: String) {
         this.domain = domain
@@ -149,6 +134,7 @@ class WebDavViewModel : ViewModel() {
     fun updatePassword(password: String) {
         this.password = password
     }
+
     fun resetMessage() {
         _webDavUiState.update {
             it.copy(message = "")

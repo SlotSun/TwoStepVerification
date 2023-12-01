@@ -14,10 +14,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -33,6 +31,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.ui.components.LoadingContent
 import com.slot.twostepverification.utils.widget.CtrTextField
 
@@ -42,6 +41,7 @@ import com.slot.twostepverification.utils.widget.CtrTextField
 fun WebDavView(
     viewModel: WebDavViewModel = viewModel(),
     onPopBackStack: () -> Unit = {},
+    onPopBackStackToNav: () -> Unit = {}
 ) {
     val ctx = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -49,7 +49,7 @@ fun WebDavView(
 
     SideEffect() {
         if (uiState.isLogin) {
-            onPopBackStack()
+            onPopBackStackToNav()
         }
     }
 
@@ -60,7 +60,6 @@ fun WebDavView(
         }
     }
     Scaffold(
-
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -109,6 +108,7 @@ fun WebDavView(
                 Column {
                     // webDav地址：默认坚果云
                     CtrTextField(
+                        str = LocalConfig.webDavUrl,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
@@ -119,6 +119,7 @@ fun WebDavView(
                     )
                     // WEBDAV 用户名
                     CtrTextField(
+                        str = LocalConfig.user,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
@@ -128,6 +129,7 @@ fun WebDavView(
                         }
                     )
                     CtrTextField(
+                        str = LocalConfig.password,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),

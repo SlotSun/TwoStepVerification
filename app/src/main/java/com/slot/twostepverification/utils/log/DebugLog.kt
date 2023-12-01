@@ -1,4 +1,4 @@
-package com.slot.twostepverification.utils
+package com.slot.twostepverification.utils.log
 
 import android.util.Log
 import com.slot.twostepverification.BuildConfig

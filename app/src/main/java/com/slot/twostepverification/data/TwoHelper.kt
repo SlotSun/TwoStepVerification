@@ -7,6 +7,7 @@ import com.slot.twostepverification.data.database.TwoDatabase
 import com.slot.twostepverification.data.entity.Authorization
 import com.slot.twostepverification.data.entity.Cache
 import com.slot.twostepverification.data.entity.VerificationItem
+import kotlinx.coroutines.runBlocking
 
 
 /**
@@ -63,6 +64,9 @@ object TwoHelper {
             Log.e(this.javaClass.name, e.message.toString())
             ArrayList()
         }
+    }
+    fun getSyncItems():List<VerificationItem> = runBlocking {
+        getItems()
     }
 
     suspend fun getAuth(): Authorization? {

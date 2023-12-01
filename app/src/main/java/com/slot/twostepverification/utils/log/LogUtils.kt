@@ -1,8 +1,10 @@
 @file:Suppress("unused")
 
-package com.slot.twostepverification.utils
+package com.slot.twostepverification.utils.log
 
 import android.annotation.SuppressLint
+import com.slot.twostepverification.utils.file.FileUtils
+import com.slot.twostepverification.utils.getPrefBoolean
 import splitties.init.appCtx
 import java.text.SimpleDateFormat
 import java.util.Date

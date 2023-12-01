@@ -1,5 +1,8 @@
 package com.slot.twostepverification.ui.nav
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -7,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -22,12 +24,18 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.titleStyle
 import com.slot.twostepverification.const.ubTitleStyle
@@ -38,9 +46,17 @@ import com.slot.twostepverification.const.ubTitleStyle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavScreen(
+    viewModel: NavViewModel = viewModel(),
     onNavigateToWebDav: () -> Unit,
     onPopBackStack: () -> Unit,
 ) {
+    val navUiState by viewModel.uiState.collectAsStateWithLifecycle()
+    // 手动选择备份目录
+    var filePath by remember { mutableStateOf<Uri?>(LocalConfig.filePath) }
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
+        filePath = it
+        viewModel.selectFilePath(it)
+    }
     val ctx = LocalContext.current
     Scaffold(
         topBar = {
@@ -118,10 +134,13 @@ fun NavScreen(
                     )
                 }
             )
+            //当前存储于
             ListItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
-                    .clickable { },
+                    .clickable {
+                        launcher.launch(null)
+                    },
                 headlineContent = {
                     Text(
                         text = locale("current_storage_location"),
@@ -130,7 +149,7 @@ fun NavScreen(
                 },
                 supportingContent = {
                     Text(
-                        text = locale("Current_storage_path"),
+                        text = locale("Current_storage_path").plus("${navUiState.filePath}"),
                         style = ubTitleStyle
                     )
                 }
@@ -187,6 +206,25 @@ fun NavScreen(
                 headlineContent = {
                     Text(
                         text = locale("Import_backup_file"),
+                        style = titleStyle
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        text = locale("Notice_only_app_itself"),
+                        style = ubTitleStyle
+                    )
+                }
+            )
+            ListItem(
+                modifier = Modifier
+                    .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .clickable {
+                        viewModel.backUp()
+                    },
+                headlineContent = {
+                    Text(
+                        text = "开始备份",
                         style = titleStyle
                     )
                 },

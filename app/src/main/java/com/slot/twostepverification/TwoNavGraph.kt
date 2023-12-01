@@ -131,6 +131,9 @@ fun TwoNavGraph(
             WebDavView(
                 onPopBackStack = {
                     twoNavActions.popBackStackLast()
+                },
+                onPopBackStackToNav = {
+                    twoNavActions.popBackStack(TwoDestinations.NAV)
                 }
             )
         }
