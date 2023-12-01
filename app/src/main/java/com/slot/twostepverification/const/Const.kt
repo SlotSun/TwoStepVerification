@@ -1,5 +1,6 @@
 package com.slot.twostepverification.const
 
+import android.accounts.Account
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -30,6 +31,14 @@ val ubTitleStyle = TextStyle(fontSize = 14.sp)
 // webdav
 const val AUTH_IS_OK = "authIsOk"
 const val AUTHORIZATION = "Authorization"
+const val DAV_PATH = "davPath"
+
+object PreferKey{
+    const val AUTHORIZATION = "AUTHORIZATION"
+    const val DAV_PATH = "DAV_PATH"
+    const val ACCOUNT= "account"
+    const val PASS_WORD = "Password"
+}
 
 
 

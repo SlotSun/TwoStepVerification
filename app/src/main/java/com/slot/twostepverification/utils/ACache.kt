@@ -7,6 +7,8 @@ import android.graphics.Canvas
 import android.graphics.PixelFormat
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import com.slot.twostepverification.utils.log.DebugLog
+import com.slot.twostepverification.utils.log.printOnDebug
 import org.json.JSONArray
 import org.json.JSONObject
 import splitties.init.appCtx
