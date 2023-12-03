@@ -63,11 +63,6 @@ fun PermissionView(
                 data = Uri.fromParts("package", ctx.packageName, null)
             }
         )
-        ctx.startActivityForResult(
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", ctx.packageName, null)
-            },1
-        )
     }
     // dialog 有需要申请的权限就弹出请求
     dialogQueue
