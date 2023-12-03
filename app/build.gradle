@@ -45,7 +45,7 @@ android {
 
 
         release {
-            debuggable true
+            applicationIdSuffix '.release'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -88,7 +88,6 @@ protobuf {
 
 
 dependencies {
-
 
     // Splitties：简化kotlin代码的库
     implementation("com.louiscad.splitties:splitties-appctx:3.0.0")

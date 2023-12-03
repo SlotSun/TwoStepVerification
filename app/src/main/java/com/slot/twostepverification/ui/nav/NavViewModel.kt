@@ -1,17 +1,19 @@
 package com.slot.twostepverification.ui.nav
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.slot.twostepverification.const.LocalConfig
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.file.store.Backup
+import com.slot.twostepverification.utils.permission.Permissions
 import com.slot.twostepverification.utils.showToasts
 import io.legado.app.help.coroutine.Coroutine
+import com.slot.twostepverification.utils.permission.PermissionsCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import splitties.init.appCtx
 
 data class NavUiState(
@@ -35,6 +37,7 @@ class NavViewModel : ViewModel() {
             )
         }
     }
+
     /**
      *  选择备份路径
      */
@@ -52,12 +55,14 @@ class NavViewModel : ViewModel() {
         }
     }
 
+
     /**
-     *  检查权限
+     *  引导用户设置权限
      */
-    private fun checkPermission():Boolean {
-        return true
+    private fun checkPermission(permission: Array<String>, ctx: Context) {
+
     }
+
 
     /**
      *  文件从数据库导出并加密
@@ -71,15 +76,15 @@ class NavViewModel : ViewModel() {
     /**
      *  上传到云端
      */
-    private fun uploadData(){
+    private fun uploadData() {
         Coroutine.async {
-            uiState.value.filePath?.let {uri->
-                Backup.backup(appCtx,uri.toString())
+            uiState.value.filePath?.let { uri ->
+                Backup.backup(appCtx, uri.toString())
             }
         }.onSuccess {
-            appCtx.showToasts("备份成功")
+            appCtx.showToasts(locale("backup_success"))
         }.onError {
-            appCtx.showToasts("备份失败")
+            appCtx.showToasts(locale("backup_fail"))
         }
     }
 
@@ -87,6 +92,13 @@ class NavViewModel : ViewModel() {
      *  本地备份
      */
     fun backUp() {
-        uploadData()
+        // 要优先获取到 uri读取权限
+        PermissionsCompat.Builder()
+            .addPermissions(*Permissions.Group.STORAGE)
+            .rationale(locale("tip_perm_request_storage"))
+            .onGranted {
+               uploadData()
+            }
+            .request()
     }
 }

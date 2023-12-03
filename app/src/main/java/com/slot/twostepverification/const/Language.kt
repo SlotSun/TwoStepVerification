@@ -86,8 +86,12 @@ val languageEN: Map<String, String> = mapOf(
     "title_activity_language_dialog" to "LanguageDialog",
     "ERROR" to "Error",
     "TheQRcodeisinvalid" to "The valid QR code in the picture cannot be recognized, please try again with another one",
-    "FailToAuthorizeWebDav" to "Fail to authorize WebDav application"
-
+    "FailToAuthorizeWebDav" to "Fail to authorize WebDav application",
+    "Prompt" to "Prompt",
+    "dialog_setting" to "Go to Settings",
+    "tip_perm_request_storage" to "needs storage access to find and read books. please go App Settingsto allow Storage permission.",
+    "backup_success" to "Backup succeed",
+    "backup_fail" to "Backup failed",
 )
 
 
@@ -176,8 +180,12 @@ val languageCN: Map<String, String> = mapOf(
     "TheQRcodeisinvalid" to "无法识别图片中的有效二维码，请换一张重试",
     "PermissionNeed" to "该功能需要此权限，请打开该权限",
     "PermissionPlease" to "请求权限",
-    "FailToAuthorizeWebDav" to "登录WebDav失败"
-
+    "FailToAuthorizeWebDav" to "登录WebDav失败",
+    "Prompt" to "提示",
+    "dialog_setting" to "Go to Settings",
+    "tip_perm_request_storage" to "需要访问存储卡权限，请前往“设置”—“应用权限”，打开所需权限",
+    "backup_success" to "备份成功",
+    "backup_fail" to "备份失败",
 )
 val locales: Map<String, Map<String, String>> = mapOf(
     "English" to languageEN,

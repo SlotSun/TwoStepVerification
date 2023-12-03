@@ -1,13 +1,16 @@
 package com.slot.twostepverification.ui.scan
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.Task
@@ -20,6 +23,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions
 import com.slot.twostepverification.const.DYNAMIC_COLOR
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.data.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
 import com.slot.twostepverification.ui.config.ConfigUIState
@@ -29,6 +33,9 @@ import com.slot.twostepverification.utils.camera.cropTextImage
 import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.otp.GoogleAuth
 import com.slot.twostepverification.utils.otp.GoogleAuthInfoException
+import com.slot.twostepverification.utils.permission.Permissions
+import com.slot.twostepverification.utils.permission.PermissionsCompat
+import com.slot.twostepverification.utils.showToasts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +43,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import splitties.init.appCtx
 import java.util.concurrent.Executors
 
 data class ScanUIState(
@@ -72,7 +80,15 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
 
     private var enableAnalysis = true
 
-
+    fun getCameraPermission(){
+        PermissionsCompat.Builder()
+            .addPermissions(*Permissions.Group.CAMERA)
+            .rationale(locale("需要Camera权限"))
+            .onGranted {
+               appCtx.showToasts("获取权限成功")
+            }
+            .request()
+    }
 
     // 重新识别
     fun analyzeReStart() {

@@ -84,40 +84,35 @@ class WebDavViewModel : ViewModel() {
         // 将domain user 等存进SP
         viewModelScope.launch {
             val auth = getAuthHandler()
-            kotlin.runCatching {
-                authIsOK = WebDav(auth).check()
-
-            }.onFailure {
-                authIsOK = false
-                _webDavUiState.update {
-                    it.copy(
-                        isLogin = false,
-                        isLoading = false,
-                        message = "登录 $authIsOK，请重新输入配置"
-                    )
-                }
-                Log.e("WEBDAV_LOGIN", "${it.message}")
-            }
-            if (authIsOK) {
+            if (WebDav(auth).check()) {
                 //登录成功 添加到数据库
+                authIsOK = true
                 LocalConfig.password = password
                 LocalConfig.user = user
                 LocalConfig.webDavUrl = domain
+                // 记录是否登录成功
+                LocalConfig.isWebDavLogin = authIsOK
                 TwoHelper.updateAuth(auth)
-
+                _webDavUiState.update {
+                    it.copy(
+                        isLogin = authIsOK,
+                        isLoading = false,
+                        message = "登录成功"
+                    )
+                }
             } else {
                 // 改动后失败删除
                 TwoHelper.delAuth()
+                _webDavUiState.update {
+                    it.copy(
+                        isLogin = authIsOK,
+                        isLoading = false,
+                        message = "登录失败"
+                    )
+                }
             }
-            // 记录是否登录成功
-            LocalConfig.isWebDavLogin = authIsOK
-            _webDavUiState.update {
-                it.copy(
-                    isLogin = authIsOK,
-                    isLoading = false,
-                    message = "登录成功"
-                )
-            }
+
+
         }
         // 跳转回上一页
     }

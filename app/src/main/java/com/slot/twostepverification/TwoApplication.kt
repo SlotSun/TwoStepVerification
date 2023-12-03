@@ -32,7 +32,6 @@ class TwoApplication:Application() {
         localeState.value = locales.getValue(DataStoreUtils.getSyncData(LOCALE, "简体中文"))
         initCoil(context = this)
     }
-
     /**
      * 初始化图片选择引擎
      */

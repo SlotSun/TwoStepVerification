@@ -62,5 +62,12 @@ object WebDavHelper {
         }
     }
 
+    /**
+     *  todo: 同步webDav到本地
+     */
+    fun syncWebDav() {
+
+    }
+
 
 }

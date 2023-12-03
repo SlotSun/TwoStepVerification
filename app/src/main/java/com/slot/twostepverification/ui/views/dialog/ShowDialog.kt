@@ -1,4 +1,4 @@
-package com.slot.twostepverification.ui.views
+package com.slot.twostepverification.ui.views.dialog
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
