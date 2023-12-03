@@ -40,7 +40,6 @@ import androidx.core.content.ContextCompat
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.camera.utils.ImageUtils
 import com.slot.twostepverification.utils.camera.utils.PermissionView
-import com.slot.twostepverification.utils.camera.utils.openSettingsPermission
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -69,25 +68,19 @@ fun CameraViewPermission(
 ) {
 
     val context = LocalContext.current
-
+//    CameraView(
+//        modifier,
+//        preview = preview,
+//        imageCapture = imageCapture,
+//        imageAnalysis = imageAnalysis,
+//        scaleType = scaleType,
+//        cameraSelector = cameraSelector,
+//        focusOnTap = focusOnTap,
+//        enableTorch = enableTorch,
+//    )
     PermissionView(
-        permission = Manifest.permission.CAMERA,
         rationale = locale("PermissionNeed"),
-        permissionNotAvailableContent = {
-            Column(modifier) {
-                Text("未能获取相机权限")
-                Spacer(modifier = Modifier.height(8.dp))
-                TextButton(
-                    onClick = {
-                        openSettingsPermission(context)
-                    }
-                ) {
-                    Text("打开应用权限设置")
-                }
-            }
-        }
     ) {
-
         CameraView(
             modifier,
             preview = preview,
@@ -98,11 +91,7 @@ fun CameraViewPermission(
             focusOnTap = focusOnTap,
             enableTorch = enableTorch,
         )
-
-
     }
-
-
 }
 
 // https://stackoverflow.com/a/70302763
