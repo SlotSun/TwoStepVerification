@@ -1,10 +1,10 @@
-package com.slot.twostepverification.utils.file.store
+package com.slot.twostepverification.help.store
 
 import android.content.Context
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.slot.twostepverification.const.LocalConfig
-import com.slot.twostepverification.data.TwoHelper
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.exception.NoStackTraceException
 import com.slot.twostepverification.utils.compress.ZipUtils
 import com.slot.twostepverification.utils.externalFiles
@@ -15,7 +15,7 @@ import com.slot.twostepverification.utils.file.openOutputStream
 import com.slot.twostepverification.utils.https.GSON
 import com.slot.twostepverification.utils.https.writeToOutputStream
 import com.slot.twostepverification.utils.isContentScheme
-import com.slot.twostepverification.utils.webdav.WebDavHelper
+import com.slot.twostepverification.help.WebDavHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
@@ -25,8 +25,10 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.coroutines.coroutineContext
 
 /**
@@ -59,7 +61,8 @@ object Backup {
      */
     @Throws(Exception::class)
     suspend fun backup(context: Context, path: String?) {
-        LocalConfig.lastBackup = System.currentTimeMillis()
+        // 坚果云在中国，本地时间和中国有时差，需要修正最后备份时间
+        LocalConfig.lastBackup = Calendar.getInstance(TimeZone.getTimeZone("GMT+8")).timeInMillis
         // 清空备份文件夹
         FileUtils.delete(backupPath)
         // 输出所有的items
