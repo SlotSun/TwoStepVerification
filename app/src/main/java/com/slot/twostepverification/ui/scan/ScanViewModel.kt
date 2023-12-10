@@ -1,16 +1,13 @@
 package com.slot.twostepverification.ui.scan
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.Preview
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.Task
@@ -22,27 +19,21 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.TextRecognizer
 import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions
-import com.slot.twostepverification.const.DYNAMIC_COLOR
 import com.slot.twostepverification.const.locale
-import com.slot.twostepverification.data.TwoHelper
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
-import com.slot.twostepverification.ui.config.ConfigUIState
-import com.slot.twostepverification.ui.home.TwoUiState
 import com.slot.twostepverification.utils.camera.CameraConfig
 import com.slot.twostepverification.utils.camera.cropTextImage
-import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.otp.GoogleAuth
 import com.slot.twostepverification.utils.otp.GoogleAuthInfoException
 import com.slot.twostepverification.utils.permission.Permissions
 import com.slot.twostepverification.utils.permission.PermissionsCompat
 import com.slot.twostepverification.utils.showToasts
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import splitties.init.appCtx
 import java.util.concurrent.Executors
 
@@ -52,7 +43,6 @@ data class ScanUIState(
 
 class ScanViewModel(config: CameraConfig) : ViewModel() {
     private val _scanUiState = MutableStateFlow(ScanUIState())
-    private val _uiState = MutableStateFlow(TwoUiState())
     val uiState: StateFlow<ScanUIState> = _scanUiState.asStateFlow()
     val preview = config.options(Preview.Builder())
     val imageCapture: ImageCapture = config.options(ImageCapture.Builder())
@@ -156,18 +146,8 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
                         val itemList = getScanResult(it,select)
                         if (itemList.isNotEmpty()) {
                             viewModelScope.launch {
-                                val items = mutableListOf<VerificationItem>()
-                                items.addAll(_uiState.value.listItem)
-                                items.addAll(itemList)
                                 scanBarcodeRes.value = true
-                                TwoHelper.updateItems(items = items)
-                                withContext(Dispatchers.IO) {
-                                    _uiState.update {
-                                        it.copy(
-                                            listItem = items
-                                        )
-                                    }
-                                }
+                                TwoHelper.updateItems(items = itemList)
                             }
 //                        }
                     } else {

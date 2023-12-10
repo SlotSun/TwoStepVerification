@@ -7,7 +7,7 @@ import com.slot.twostepverification.data.entity.Authorization
  */
 @Suppress("unused")
 class WebDavFile(
-    urlStr: String,
+    val urlStr: String,
     authorization: Authorization,
     val displayName: String,
     val urlName: String,

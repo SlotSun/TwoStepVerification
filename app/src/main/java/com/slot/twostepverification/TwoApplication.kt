@@ -1,6 +1,7 @@
 package com.slot.twostepverification
 
 import android.app.Application
+import android.app.LocaleConfig
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.compose.runtime.MutableState
@@ -8,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import coil.Coil
 import coil.ImageLoader
 import com.slot.twostepverification.const.LOCALE
+import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locales
 import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.https.OkHelper
@@ -29,7 +31,7 @@ class TwoApplication:Application() {
         setHttpClient(OkHelper.httpClient(applicationContext))
         // 初始化 datastore-preferences
         DataStoreUtils.init(applicationContext)
-        localeState.value = locales.getValue(DataStoreUtils.getSyncData(LOCALE, "简体中文"))
+        localeState.value = locales.getValue(LocalConfig.localLanguage)
         initCoil(context = this)
     }
     /**

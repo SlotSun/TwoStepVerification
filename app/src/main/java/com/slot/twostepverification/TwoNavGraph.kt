@@ -39,7 +39,6 @@ fun TwoNavGraph(
 ) {
     val twoNavActions = remember(navController) { TwoNavActions(navController = navController) }
     val viewModel: HomeViewModel = viewModel()
-    val twoUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val statusBarColor = colorResource(R.color.theme)
     val systemUiController = rememberSystemUiController()
     DisposableEffect(lifecycleOwner) {
