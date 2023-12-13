@@ -17,10 +17,6 @@ const val VIEW_CLICK_INTERVAL_TIME = 800 //View的click方法的两次点击间�
 
 const val UA_NAME = "User-Agent"
 
-const val MAX_THREAD = 9
-
-const val DEFAULT_WEBDAV_ID = -1L
-
 val charsets =
     arrayListOf("UTF-8", "GB2312", "GB18030", "GBK", "Unicode", "UTF-16", "UTF-16LE", "ASCII")
 

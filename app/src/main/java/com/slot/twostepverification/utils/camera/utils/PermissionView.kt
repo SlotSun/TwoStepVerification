@@ -5,16 +5,17 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
@@ -24,7 +25,6 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.permission.Permissions
-import com.slot.twostepverification.utils.permission.PermissionsCompat
 
 
 /*
@@ -39,30 +39,33 @@ import com.slot.twostepverification.utils.permission.PermissionsCompat
 fun PermissionView(
     viewModel: PermissionViewModel = viewModel(),
     permission: String = Permissions.CAMERAS,
-    rationale: String = locale("PermissionNeed"),
     content: @Composable () -> Unit = { }
 ) {
-    val permissionState = rememberPermissionState(permission = permission)
-    val ctx = LocalContext.current as Activity
 
+    val permissionState = rememberPermissionState(permission = permission)
+    val ctx = LocalContext.current as ComponentActivity
     val dialogQueue = viewModel.permissionDialogQueue
+    // 单项权限请求器
     val singlePermissionResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             viewModel.onPermissionResult(permission = permission, isGranted = isGranted)
         }
     )
-    LaunchedEffect(viewModel) {
+    // 跳转app详情设置启动器
+    val openSettingsResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult(),
+        onResult = {
+            // 返回时 再次请求权限
+            if (!permissionState.status.isGranted) {
+                singlePermissionResultLauncher.launch(permission)
+            }
+        }
+    )
+    LaunchedEffect(Unit) {
         if (!permissionState.status.isGranted) {
             singlePermissionResultLauncher.launch(permission)
         }
-    }
-    fun openAppSettings() {
-        ctx.startActivity(
-            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", ctx.packageName, null)
-            }
-        )
     }
     // dialog 有需要申请的权限就弹出请求
     dialogQueue
@@ -75,18 +78,24 @@ fun PermissionView(
                     }
                     else -> return@forEach
                 },
-                //请看底部shouldShowRequestPermissionRationale的详解
+                //shouldShowRequestPermissionRationale 为false 用户永久拒绝了：引导用户去设置里开放权限
                 isPermanentlyDeclined = !shouldShowRequestPermissionRationale(ctx, permissionItem),
                 onDismiss = viewModel::dismissDialog,
                 onOkClick = {
                     //取消当前Dialog，再次向用户申请
                     viewModel.dismissDialog()
-                    //singlePermissionResultLauncher.launch(Manifest.permission.CAMERA)
                     singlePermissionResultLauncher.launch(
                         permissionItem
                     )
                 },
-                onGoToAppSettings = ::openAppSettings
+                onGoToAppSettings = {
+                    viewModel.dismissDialog()
+                    openSettingsResultLauncher.launch(
+                        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                            data = Uri.fromParts("package", ctx.packageName, null)
+                        }
+                    )
+                }
             )
         }
     content()

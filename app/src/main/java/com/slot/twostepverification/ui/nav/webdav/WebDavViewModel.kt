@@ -1,16 +1,10 @@
 package com.slot.twostepverification.ui.nav.webdav
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.slot.twostepverification.const.AUTH_IS_OK
 import com.slot.twostepverification.const.LocalConfig
-import com.slot.twostepverification.data.TwoHelper
-import com.slot.twostepverification.data.TwoHelper.getAuth
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.Authorization
-import com.slot.twostepverification.data.entity.Two
-import com.slot.twostepverification.ui.scan.ScanUIState
-import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.webdav.WebDav
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 data class WebDavUIState(
     var isLoading: Boolean = false,

@@ -1,7 +1,7 @@
 package com.slot.twostepverification.ui.code
 
 import androidx.lifecycle.viewModelScope
-import com.slot.twostepverification.data.TwoHelper
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
 import com.slot.twostepverification.utils.encoding.Base32
 import com.slot.twostepverification.utils.widget.TextFieldController
@@ -73,9 +73,7 @@ class CodeViewModel : BaseViewModel() {
         )
 
         viewModelScope.launch {
-            val items = mutableListOf<VerificationItem>()
-            items.addAll(TwoHelper.getItems())
-            items.add(item)
+            val items = listOf(item)
             TwoHelper.updateItems(items)
         }
     }

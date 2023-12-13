@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
@@ -55,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.R
 import com.slot.twostepverification.const.locale
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.ui.home.components.ListItemView
 import com.slot.twostepverification.utils.showToast
 
@@ -68,8 +71,9 @@ fun HomeScreen(
     onNavigateToCode:()->Unit = {}
 ) {
     val ctx = LocalContext.current
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by TwoHelper.itemState.collectAsStateWithLifecycle()
     val homeListState = rememberLazyListState()
+    val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
     val itemList by remember { mutableStateOf(uiState.listItem) }
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -131,7 +135,7 @@ fun HomeScreen(
             }
         },
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        Column(modifier = Modifier.padding(innerPadding).verticalScroll(scrollState)) {
             uiState.listItem.forEach() {
                 ListItemView(item = it)
             }

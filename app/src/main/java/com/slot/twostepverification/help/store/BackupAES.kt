@@ -1,4 +1,4 @@
-package com.slot.twostepverification.utils.file.store
+package com.slot.twostepverification.help.store
 
 import cn.hutool.crypto.symmetric.AES
 import com.slot.twostepverification.const.LocalConfig

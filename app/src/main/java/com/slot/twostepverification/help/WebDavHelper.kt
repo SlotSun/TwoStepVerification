@@ -28,6 +28,7 @@ object WebDavHelper {
     var authorization: Authorization? = null
         private set
 
+    val isJianGuoYun get() = rootWebDavUrl.startsWith(defaultWebDavUrl, true)
     // 初始化
     init {
         runBlocking {
@@ -100,8 +101,8 @@ object WebDavHelper {
      *  获取云端数据列表
      */
     @Throws(Exception::class)
-    suspend fun getBackupNames(): ArrayList<String> {
-        val names = arrayListOf<String>()
+    suspend fun getBackupNames(): List<String> {
+        val names = mutableListOf<String>()
         authorization?.let {
             var files = WebDav(it).listFiles()
             files = files.sortedWith { o1, o2 ->

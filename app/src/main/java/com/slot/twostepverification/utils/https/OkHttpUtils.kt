@@ -1,6 +1,7 @@
 package com.slot.twostepverification.utils.https
 
 import com.slot.twostepverification.utils.Utf8BomUtils
+import com.slot.twostepverification.utils.encoding.EncodingDetect
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
@@ -65,6 +66,8 @@ suspend fun Call.await(): Response = suspendCancellableCoroutine { block ->
 
 }
 
+
+
 fun <T> ResponseBody.unCompress(success: (inputStream: InputStream) -> T): T {
     return if (contentType() == "application/zip".toMediaType()) {
         byteStream().use { byteStream ->
@@ -75,6 +78,26 @@ fun <T> ResponseBody.unCompress(success: (inputStream: InputStream) -> T): T {
         }
     } else {
         byteStream().use(success)
+    }
+}
+
+fun ResponseBody.text(encode: String? = null): String {
+    return unCompress {
+        val responseBytes = Utf8BomUtils.removeUTF8BOM(it.readBytes())
+        var charsetName: String? = encode
+
+        charsetName?.let {
+            return@unCompress String(responseBytes, Charset.forName(charsetName))
+        }
+
+        //根据http头判断
+        contentType()?.charset()?.let { charset ->
+            return@unCompress String(responseBytes, charset)
+        }
+
+        //根据内容判断
+        charsetName = EncodingDetect.getHtmlEncode(responseBytes)
+        return@unCompress String(responseBytes, Charset.forName(charsetName))
     }
 }
 

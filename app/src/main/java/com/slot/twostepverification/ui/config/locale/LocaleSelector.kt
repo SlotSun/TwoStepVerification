@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.LOCALE
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.locales
 import com.slot.twostepverification.utils.data.DataStoreUtils
 
@@ -39,7 +40,6 @@ fun localeSelector(
     }
     /// todo:需要优化
     var selectedOption by remember { mutableStateOf(DataStoreUtils.getSyncData(LOCALE, "English")) }
-
     AlertDialog(
         title = {
             Text(
@@ -85,7 +85,7 @@ fun localeSelector(
                 onDismissRequest()
             }) {
                 Text(
-                    text = localeState.value.getValue("OK"),
+                    text = locale("ok"),
                     style = TextStyle(fontSize = 20.sp, fontWeight = FontWeight.Normal)
                 )
             }

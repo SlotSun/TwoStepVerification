@@ -1,6 +1,35 @@
 package com.slot.twostepverification.const
 
 import com.slot.twostepverification.TwoApplication.Companion.localeState
+import java.util.Locale
+
+// todo:后续用object 实现
+// questions:1-> 如何状态刷新
+/**
+ *  i18n
+ */
+data class Language(var locale: Locale = Locale.getDefault()) {
+//    private var locale = Locale.getDefault()
+
+    /**
+     *  切换当前APP界面语言
+     *  @param locale  java.util.Locale
+     */
+    val login:  String
+        get() = when (locale) {
+            Locale.CHINA -> "登录"
+            Locale.ENGLISH -> "login"
+            else -> "login"
+        }
+    val ok:String
+        get() = when(locale) {
+            Locale.CHINA -> "确定"
+            Locale.ENGLISH -> "ok"
+            else -> "ok"
+        }
+}
+
+
 
 //英语
 val languageEN: Map<String, String> = mapOf(

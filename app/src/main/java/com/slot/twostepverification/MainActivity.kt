@@ -1,23 +1,20 @@
 package com.slot.twostepverification
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.slot.twostepverification.ui.theme.TwoStepVerificationTheme
 import com.slot.twostepverification.ui.theme.getCurrentColors
-import com.slot.twostepverification.utils.setAndroidNativeLightStatusBar
-import com.slot.twostepverification.utils.transparentStatusBar
 
 
 class MainActivity : ComponentActivity() {
@@ -29,15 +26,13 @@ class MainActivity : ComponentActivity() {
         setContentView(ComposeView(this).apply {
             setContent {
                 val colors = getCurrentColors()
-                Box(Modifier.safeDrawingPadding()) {
-                    TwoStepVerificationTheme(
-                        colorScheme = colors,
-                        dynamicColor = false
-                    ) {
-                        val navController = rememberNavController()
-                        val startDestination = TwoDestinations.MAIN_ROUTE
-                        TwoNavGraph(navController, startDestination)
-                    }
+                TwoStepVerificationTheme(
+                    colorScheme = colors,
+                    dynamicColor = false
+                ) {
+                    val navController = rememberNavController()
+                    val startDestination = TwoDestinations.MAIN_ROUTE
+                    TwoNavGraph(navController, startDestination)
                 }
             }
         })

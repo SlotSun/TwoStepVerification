@@ -79,7 +79,6 @@ fun CameraViewPermission(
 //        enableTorch = enableTorch,
 //    )
     PermissionView(
-        rationale = locale("PermissionNeed"),
     ) {
         CameraView(
             modifier,

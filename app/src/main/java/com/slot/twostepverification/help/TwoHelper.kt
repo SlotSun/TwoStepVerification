@@ -39,7 +39,6 @@ object TwoHelper {
         // 每次对数据库操作 主界面刷新
         // 合并原来数据 去重
         val insItems = mutableListOf<VerificationItem>()
-
         val res = insItems.let {
             it.addAll(_itemState.value.listItem)
             it.addAll(items)

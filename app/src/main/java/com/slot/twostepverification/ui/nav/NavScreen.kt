@@ -5,9 +5,17 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,6 +24,7 @@ import androidx.compose.material.icons.filled.HelpOutline
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -24,6 +33,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,8 +43,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.const.LocalConfig
@@ -60,6 +74,85 @@ fun NavScreen(
         viewModel.selectFilePath(it)
     }
     val ctx = LocalContext.current
+
+
+    if (navUiState.isSelectRestoreFileFromWebDav) {
+        Dialog(
+            onDismissRequest = {
+                viewModel.closeSelectRestoreFileFromWebDavDialog()
+            }
+        ) {
+            Scaffold(
+                // todo：调整高度
+                modifier = Modifier.systemBarsPadding(),
+                topBar = {
+                    TopAppBar(
+                        colors = TopAppBarDefaults.topAppBarColors(
+                            containerColor = Color.White
+                        ),
+                        title = {
+                            Text(
+                                text = "选择恢复文件",
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                    )
+                }
+            ) { innerPadding ->
+                Box {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .fillMaxSize(),
+                        contentPadding = PaddingValues(horizontal = 18.dp, vertical = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(navUiState.webDavFileList.size) { index ->
+                            val name = navUiState.webDavFileList[index]
+                            Card(
+                                shape = CardDefaults.outlinedShape,
+                                modifier = Modifier
+                                    .clickable(onClick = {
+                                        //恢复
+                                        viewModel.restoreWebDav(name = name)
+                                    })
+                                    .fillMaxWidth(),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = MaterialTheme.colorScheme.background
+                                ),
+                            ) {
+                                Text(
+                                    text = name,
+                                    modifier = Modifier.padding(
+                                        start = 15.dp,
+                                        top = 18.dp,
+                                        bottom = 18.dp
+                                    ),
+                                    style = TextStyle(
+                                        fontSize = 26.sp,
+                                        fontWeight = FontWeight.W400
+                                    ),
+                                )
+                                Divider(
+                                    thickness = 0.3.dp,
+                                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.3F)
+                                )
+                            }
+                        }
+                    }
+                    if (navUiState.isShowLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.width(64.dp),
+                            color = MaterialTheme.colorScheme.secondary,
+                            trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -86,7 +179,11 @@ fun NavScreen(
             )
         }
     ) {
-        Column(modifier = Modifier.padding(it).verticalScroll(rememberScrollState())) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .verticalScroll(rememberScrollState())
+        ) {
             Card(
                 modifier = Modifier
                     .padding(vertical = 12.dp, horizontal = 16.dp)
@@ -204,7 +301,9 @@ fun NavScreen(
             ListItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
-                    .clickable { },
+                    .clickable {
+                        viewModel.selectRestoreFileFromWebDav()
+                    },
                 headlineContent = {
                     Text(
                         text = locale("Import_backup_file"),
@@ -218,6 +317,7 @@ fun NavScreen(
                     )
                 }
             )
+            // 开始备份
             ListItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
@@ -237,8 +337,26 @@ fun NavScreen(
                     )
                 }
             )
-
-
+            // 开始同步
+            ListItem(
+                modifier = Modifier
+                    .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .clickable {
+                        viewModel.syncWebDav()
+                    },
+                headlineContent = {
+                    Text(
+                        text = "开始同步",
+                        style = titleStyle
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        text = locale("Notice_only_app_itself"),
+                        style = ubTitleStyle
+                    )
+                }
+            )
         }
     }
 }

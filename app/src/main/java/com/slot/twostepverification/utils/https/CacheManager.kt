@@ -1,7 +1,7 @@
 package com.slot.twostepverification.utils.https
 
 import androidx.collection.LruCache
-import com.slot.twostepverification.data.TwoHelper
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.Cache
 import com.slot.twostepverification.utils.ACache
 import com.slot.twostepverification.utils.memorySize

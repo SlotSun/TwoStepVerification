@@ -5,11 +5,13 @@ import android.util.Log
 import at.bitfire.dav4jvm.DavCollection
 import com.slot.twostepverification.data.entity.Authorization
 import com.slot.twostepverification.exception.NoStackTraceException
+import com.slot.twostepverification.utils.AppLog
 import com.slot.twostepverification.utils.findNS
 import com.slot.twostepverification.utils.findNSPrefix
 import com.slot.twostepverification.utils.https.NetworkUtils
 import com.slot.twostepverification.utils.https.OkHelper.okHttpClient
 import com.slot.twostepverification.utils.https.newCallResponse
+import com.slot.twostepverification.utils.https.text
 import com.slot.twostepverification.utils.log.printOnDebug
 import com.slot.twostepverification.utils.toRequestBody
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +37,9 @@ import java.time.format.DateTimeFormatter
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 open class WebDav(val authHandler: Authorization) {
+
+    private var path = authHandler.url
+
     companion object {
         private val dateTimeFormatter = DateTimeFormatter.RFC_1123_DATE_TIME
 
@@ -63,7 +68,6 @@ open class WebDav(val authHandler: Authorization) {
             </propfind>"""
     }
 
-    private val path = authHandler.url
 
     /**
      * @param propsList 指定列出文件的哪些属性
@@ -92,7 +96,18 @@ open class WebDav(val authHandler: Authorization) {
             method("PROPFIND", requestBody)
         }.apply {
             checkResult(this)
-        }.body.string()
+        }.body.text()
+    }
+
+
+    @Throws(WebDavException::class)
+    suspend fun listFiles(): List<WebDavFile> {
+        propFindResponse()?.let { body ->
+            return parseBody(body).filter {wbFile->
+                wbFile.urlStr != path
+            }
+        }
+        return emptyList()
     }
 
     /**
@@ -101,7 +116,7 @@ open class WebDav(val authHandler: Authorization) {
     @Throws(Exception::class)
     private fun checkResult(response: Response) {
         if (!response.isSuccessful) {
-            val body = response.body.string()
+            val body = response.body?.string()
             if (response.code == 401) {
                 val headers = response.headers("WWW-Authenticate")
                 val supportBasicAuth = headers.any {
@@ -127,6 +142,7 @@ open class WebDav(val authHandler: Authorization) {
             throw WebDavException(message ?: "未知错误 code:${response.code}")
         }
     }
+
     //备份地址
     private val url: URL = URL(authHandler.url)
     private val httpUrl: String? by lazy {
@@ -149,7 +165,7 @@ open class WebDav(val authHandler: Authorization) {
             if (request.url.host.equals(host, true)) {
                 request = request
                     .newBuilder()
-                    .header("Authorization", authHandler.data)
+                    .header(authHandler.name, authHandler.data)
                     .build()
             }
             chain.proceed(request)
@@ -244,7 +260,6 @@ open class WebDav(val authHandler: Authorization) {
     }
 
 
-
     @Throws(WebDavException::class)
     suspend fun upload(
         localPath: String,
@@ -275,10 +290,11 @@ open class WebDav(val authHandler: Authorization) {
                 }
             }
         }.onFailure {
-            Log.e("WebDav","WebDav上传失败\n${it.localizedMessage}")
+            AppLog.put("WebDav上传失败\n${it.localizedMessage}")
             throw WebDavException("WebDav上传失败\n${it.localizedMessage}")
         }
     }
+
     @Throws(WebDavException::class)
     suspend fun upload(uri: Uri, contentType: String) {
         // 务必注意RequestBody不要嵌套，不然上传时内容可能会被追加多余的文件信息
@@ -294,10 +310,11 @@ open class WebDav(val authHandler: Authorization) {
                 }
             }
         }.onFailure {
-            Log.e("WebDav","WebDav上传失败\n${it.localizedMessage}")
+            AppLog.put("WebDav上传失败\n${it.localizedMessage}")
             throw WebDavException("WebDav上传失败\n${it.localizedMessage}")
         }
     }
+
     /**
      * 下载到本地
      * @param savedPath       本地的完整路径，包括最后的文件名
@@ -341,9 +358,10 @@ open class WebDav(val authHandler: Authorization) {
                 checkResult(it)
             }
         }.onFailure {
-            Log.e("WebDAV", "WebDav删除失败\n${it.localizedMessage}")
+            AppLog.put("WebDav删除失败\n${it.localizedMessage}")
         }.isSuccess
     }
+
 
     /**
      * 解析webDav返回的xml
@@ -389,7 +407,7 @@ open class WebDav(val authHandler: Authorization) {
                 }.getOrNull() ?: 0
                 val fullURL = NetworkUtils.getAbsoluteURL(baseUrl, hrefDecode)
                 webDavFile = WebDavFile(
-                    fullURL,
+                    urlStr =  fullURL,
                     authorization = authHandler,
                     displayName = fileName,
                     urlName = urlName,
