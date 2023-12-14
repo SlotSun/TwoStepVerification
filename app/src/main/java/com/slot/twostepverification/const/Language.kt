@@ -66,6 +66,7 @@ val languageEN: Map<String, String> = mapOf(
     "Account" to "Account",
     "cloud_connection_type" to "Cloud Connection Type",
     "current_storage_location" to "Current Storage Location",
+    "current_only_support_webdav_sorry" to "Current only support WebDav,Sorry!",
     "Current_Usage" to "Current Usage",
     "Login_Account" to "Login Account",
     "You_may_need_a_reliable_network_connection" to "You may need a reliable network connection.",
@@ -121,6 +122,11 @@ val languageEN: Map<String, String> = mapOf(
     "tip_perm_request_storage" to "needs storage access to find and read books. please go App Settingsto allow Storage permission.",
     "backup_success" to "Backup succeed",
     "backup_fail" to "Backup failed",
+    "backup" to "backup",
+    "Restore_the_backup" to "Restore the backup",
+    "restoreFormWebDav" to "Restore form webdav",
+    "Sync" to "Sync",
+    "SyncFromLastBackup" to "Sync form last backup",
 )
 
 
@@ -158,6 +164,7 @@ val languageCN: Map<String, String> = mapOf(
     "Account" to "帐户",
     "cloud_connection_type" to "云连接类型",
     "current_storage_location" to "当前存储于",
+    "current_only_support_webdav_sorry" to "目前仅支持WebDav,Sorry!",
     "Current_Usage" to "当前使用情况",
     "Login_Account" to "登录账户",
     "You_may_need_a_reliable_network_connection" to "可能需要您有可靠的网络连接。",
@@ -215,6 +222,12 @@ val languageCN: Map<String, String> = mapOf(
     "tip_perm_request_storage" to "需要访问存储卡权限，请前往“设置”—“应用权限”，打开所需权限",
     "backup_success" to "备份成功",
     "backup_fail" to "备份失败",
+    "backup" to "备份",
+    "Restore_the_backup" to "恢复备份",
+    "restoreFormWebDav" to "从WebDav恢复备份",
+    "Sync" to "同步",
+    "SyncFromLastBackup" to "同步最后一次备份",
+
 )
 val locales: Map<String, Map<String, String>> = mapOf(
     "English" to languageEN,

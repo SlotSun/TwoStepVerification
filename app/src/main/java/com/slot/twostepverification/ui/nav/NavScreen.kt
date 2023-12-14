@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.slot.twostepverification.const.LOCALE
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.titleStyle
@@ -196,6 +197,7 @@ fun NavScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
+            // 云链接类型
             ListItem(
                 modifier = Modifier
                     .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
@@ -208,7 +210,7 @@ fun NavScreen(
                 },
                 supportingContent = {
                     Text(
-                        text = locale("current_storage_location"),
+                        text = locale("current_only_support_webdav_sorry"),
                         style = ubTitleStyle
                     )
                 }
@@ -228,7 +230,7 @@ fun NavScreen(
                 },
                 supportingContent = {
                     Text(
-                        text = locale("You_may_need_a_reliable_network_connection"),
+                        text = if (LocalConfig.isWebDavLogin) "Login:${LocalConfig.user}" else locale("You_may_need_a_reliable_network_connection"),
                         style = ubTitleStyle
                     )
                 }
@@ -281,42 +283,7 @@ fun NavScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
             }
-            ListItem(
-                modifier = Modifier
-                    .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
-                    .clickable { },
-                headlineContent = {
-                    Text(
-                        text = locale("Export_Backup"),
-                        style = titleStyle
-                    )
-                },
-                supportingContent = {
-                    Text(
-                        text = locale("Currently_backed_up_in"),
-                        style = ubTitleStyle
-                    )
-                }
-            )
-            ListItem(
-                modifier = Modifier
-                    .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
-                    .clickable {
-                        viewModel.selectRestoreFileFromWebDav()
-                    },
-                headlineContent = {
-                    Text(
-                        text = locale("Import_backup_file"),
-                        style = titleStyle
-                    )
-                },
-                supportingContent = {
-                    Text(
-                        text = locale("Notice_only_app_itself"),
-                        style = ubTitleStyle
-                    )
-                }
-            )
+
             // 开始备份
             ListItem(
                 modifier = Modifier
@@ -326,13 +293,33 @@ fun NavScreen(
                     },
                 headlineContent = {
                     Text(
-                        text = "开始备份",
+                        text = locale("backup"),
                         style = titleStyle
                     )
                 },
                 supportingContent = {
                     Text(
                         text = locale("Notice_only_app_itself"),
+                        style = ubTitleStyle
+                    )
+                }
+            )
+            // 恢复备份
+            ListItem(
+                modifier = Modifier
+                    .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+                    .clickable {
+                        viewModel.selectRestoreFileFromWebDav()
+                    },
+                headlineContent = {
+                    Text(
+                        text = locale("Restore_the_backup"),
+                        style = titleStyle
+                    )
+                },
+                supportingContent = {
+                    Text(
+                        text = locale("restoreFormWebDav"),
                         style = ubTitleStyle
                     )
                 }
@@ -346,13 +333,13 @@ fun NavScreen(
                     },
                 headlineContent = {
                     Text(
-                        text = "开始同步",
+                        text = locale("Sync"),
                         style = titleStyle
                     )
                 },
                 supportingContent = {
                     Text(
-                        text = locale("Notice_only_app_itself"),
+                        text = locale("SyncFromLastBackup"),
                         style = ubTitleStyle
                     )
                 }
