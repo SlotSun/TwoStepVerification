@@ -1,3 +1,24 @@
-## 开发中遇到的问题：
-#### Processes com.slot.twostepverification.debug are not found. Aborting session. 
-launch Option  ->default activity 
+## 学习Compose的练手之作
+UI 参考了 踟蹰 - MD3 风格的二步验证工具
+
+
+## 免责声明
+- ⚠️ 本项目正在 **随缘** 的开发中。
+- ⚠️ 可能存在 bug 或者重大变更。
+- ⚠️ **暂时不要把本软件作为你验证的唯一工具!**
+
+### init ver.
+
+- 支持 TOTP 以及 HOTP
+- 支持手动输入参数，扫码，解析 `otpauth://` 三种导入方式
+- 支持动态取色
+- 支持动态语言切换
+- 支持webdav云备份和回复
+
+## 待开发
+
+- 云备份支持更多来源
+- 导出数据为其它 APP 的兼容格式
+- 导入更多来自其它程序的数据
+- 更丝滑的动画体验
+- 自定义拖拽item
