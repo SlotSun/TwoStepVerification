@@ -33,24 +33,27 @@ data class TextFieldController(
 @Composable
 fun CtrTextField(
     modifier: Modifier = Modifier.padding(10.dp).fillMaxWidth(),
-    str: String = "",
+    value: String = "",
     label: String = "",
+    enable:Boolean = true,
     controller: TextFieldController = TextFieldController(),
     onValueChange: (value: String) -> Unit,
     onKeyboardActions:()->Unit ={},
     visualTransformation:VisualTransformation = VisualTransformation.None,
 
 ) {
-    var value by remember { mutableStateOf(str) }
+    var value by remember { mutableStateOf(value = value) }
     OutlinedTextField(
         visualTransformation = visualTransformation,
         modifier = modifier,
+
         value = value,
         label = { Text(text = if (controller.isError) "$label*" else label) },
         onValueChange = {
             value = it
             onValueChange(value)
         },
+        enabled = enable,
         maxLines = 1,
         isError = controller.isError,
         keyboardActions = KeyboardActions{

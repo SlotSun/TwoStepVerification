@@ -11,15 +11,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-data class libDetailUiState(
+data class LibDetailUiState(
     var isLoading: Boolean = true,
     var success: Boolean = false,
     var message: String = "",
 )
 
 class LibDetailViewModel: BaseViewModel() {
-    private val _uiState = MutableStateFlow(libDetailUiState())
-    val uiState: StateFlow<libDetailUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(LibDetailUiState())
+    val uiState: StateFlow<LibDetailUiState> = _uiState.asStateFlow()
     val lisRegex = Regex("(?<=<pre>)([\\s\\S]*?)(?=<\\/pre>)")
     // 获取license
     fun getLicenseString(lib:String){

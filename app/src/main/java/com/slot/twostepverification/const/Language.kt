@@ -127,6 +127,7 @@ val languageEN: Map<String, String> = mapOf(
     "restoreFormWebDav" to "Restore form webdav",
     "Sync" to "Sync",
     "SyncFromLastBackup" to "Sync form last backup",
+    "Copied" to "Copied!",
 )
 
 
@@ -227,6 +228,7 @@ val languageCN: Map<String, String> = mapOf(
     "restoreFormWebDav" to "从WebDav恢复备份",
     "Sync" to "同步",
     "SyncFromLastBackup" to "同步最后一次备份",
+    "Copied" to "已复制!"
 
 )
 val locales: Map<String, Map<String, String>> = mapOf(

@@ -24,7 +24,7 @@ object TwoHelper {
     private const val AUTHORIZATION = "Authorization"
     private var _itemState = MutableStateFlow(TwoUiState())
     val itemState: StateFlow<TwoUiState> = _itemState.asStateFlow()
-    fun updateItemState(items:List<VerificationItem>) {
+    private fun updateItemState(items:List<VerificationItem>) {
         _itemState.update {
             it.copy(
                 listItem = items

@@ -101,7 +101,9 @@ fun CodeView(
                 .navigationBarsPadding() // padding for navigation bar
                 .imePadding(), // padding for when IME appears
             onClick = {
-                viewModel.submit()
+                if(viewModel.submit()) {
+                    onNavigateBack()
+                }
             }
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
@@ -207,7 +209,7 @@ fun SwitchButton() {
                 Button(
                     modifier = Modifier.weight(0.5F),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectType == it) MaterialTheme.colorScheme.primary else Color.White
+                        containerColor = if (selectType == it) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
                     ),
                     onClick = {
                         selectType = it
@@ -238,22 +240,29 @@ fun OtpView(
     val keyTxController by viewModel.keyTextFieldController.collectAsStateWithLifecycle()
     val timeTxController by viewModel.timeTextFieldController.collectAsStateWithLifecycle()
 
+    // 名称
     CtrTextField(
+        value = uiState.name,
         label = locale("Name"),
         controller = nameTxController,
         onValueChange = {
             uiState.name = it
         }
     )
+    // 服务提供者
     CtrTextField(
+        value = uiState.vindor,
         label = locale("Service_Provider"),
         controller = vindorTxController,
         onValueChange = {
             uiState.vindor = it
         }
     )
+    // 访问密匙
     CtrTextField(
+        value = uiState.key,
         label = locale("Access_Key"),
+        enable = uiState.edit,
         controller = keyTxController,
         onValueChange = { uiState.key = it },
     )
@@ -265,8 +274,9 @@ fun OtpView(
                 modifier = Modifier
                     .padding(10.dp)
                     .weight(0.5f),
-                str = value,
+                value = value,
                 label = locale("Time_Interval"),
+                enable = uiState.edit,
                 controller = timeTxController,
                 onValueChange = {
                     // 对数据进行过滤
@@ -280,8 +290,9 @@ fun OtpView(
                 modifier = Modifier
                     .padding(10.dp)
                     .weight(0.5f),
-                str = uiState.count.toString(),
+                value = uiState.count.toString(),
                 label = locale("Counter"),
+                enable = uiState.edit,
                 controller = timeTxController,
                 onValueChange = {
                     // 对数据进行过滤

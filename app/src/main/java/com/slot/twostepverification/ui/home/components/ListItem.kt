@@ -6,7 +6,8 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,31 +30,37 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
-import com.slot.twostepverification.const.TOTP_TIME
 import com.slot.twostepverification.const.VIEW_CLICK_INTERVAL_TIME
-import com.slot.twostepverification.crypto.otp.TOTP
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.data.entity.VerificationItem
 import com.slot.twostepverification.ui.home.HomeViewModel
 import com.slot.twostepverification.utils.otp.TotpInfo
-import java.security.Key
+import com.slot.twostepverification.utils.showToasts
+import splitties.init.appCtx
 
 
-
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),) {
+fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel()) {
+    val clipboardManager = LocalClipboardManager.current
+    val ctx = LocalContext.current
     var preValue = 0.001f
-    var beginTime by remember { mutableFloatStateOf((1- TotpInfo.getMillisTillNextRotation(30).toFloat() / (30 * 1000L))) }
+    var beginTime by remember {
+        mutableFloatStateOf(
+            (1 - TotpInfo.getMillisTillNextRotation(30).toFloat() / (30 * 1000L))
+        )
+    }
     val transition = rememberInfiniteTransition(label = "")
-    var lastTime by remember{ mutableIntStateOf(TotpInfo.getMillisTillNextRotation(30).toInt())}
+    var lastTime by remember { mutableIntStateOf(TotpInfo.getMillisTillNextRotation(30).toInt()) }
     val process = transition.animateFloat(
         initialValue = beginTime, targetValue = 1.0f,
         animationSpec = InfiniteRepeatableSpec(
@@ -65,7 +72,7 @@ fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),
     val algorithm = item.sha
     val digits = item.length!!
     val period = item.time!!
-    val secret = item.key
+    val secret = item.key!!
     LaunchedEffect(Unit) {
         token = try {
             TotpInfo(secret, algorithm, digits, period).getOtp()
@@ -77,7 +84,7 @@ fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),
     SideEffect {
         beginTime = (1 - (TotpInfo.getMillisTillNextRotation(30).toFloat()) / (30 * 1000L))
         //动画不能为0
-        lastTime = (beginTime*30*1000L+1).toInt()
+        lastTime = (beginTime * 30 * 1000L + 1).toInt()
         if (process.value <= preValue && item.type == "TOTP") {
             token = try {
                 TotpInfo(secret, algorithm, digits, period).getOtp()
@@ -95,9 +102,15 @@ fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel(),
                 vertical = 18.dp,
                 horizontal = 18.dp
             )
-            .clickable(onClick = composeClick {
-                viewModel.removeListItem(item = item)
-            })
+            .combinedClickable(
+                onClick = composeClick {
+                    clipboardManager.setText(AnnotatedString(token))
+                    ctx.showToasts(locale("Copied"))
+                },
+                onLongClick = {
+                    viewModel.openItemSettings(item = item)
+                },
+            )
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {

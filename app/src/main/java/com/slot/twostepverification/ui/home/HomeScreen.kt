@@ -17,6 +17,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.outlined.Add
@@ -68,18 +69,20 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(),
     onNavigateToConfig: () -> Unit = {},
     onNavigateToScan: () -> Unit = {},
-    onNavigateToCode:()->Unit = {}
+    onNavigateToCode: () -> Unit = {}
 ) {
     val ctx = LocalContext.current
     val uiState by TwoHelper.itemState.collectAsStateWithLifecycle()
-    val homeListState = rememberLazyListState()
+    val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     val scope = rememberCoroutineScope()
-    val itemList by remember { mutableStateOf(uiState.listItem) }
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
     val skipPartiallyExpanded by remember { mutableStateOf(false) }
     var openUriSheet by rememberSaveable { mutableStateOf(false) }
     val edgeToEdgeEnabled by remember { mutableStateOf(false) }
+    val windowInsets =
+        if (edgeToEdgeEnabled) WindowInsets(0) else BottomSheetDefaults.windowInsets
+
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded
     )
@@ -118,7 +121,7 @@ fun HomeScreen(
         floatingActionButton = {
             Button(
                 onClick = {
-                    openBottomSheet = !openBottomSheet
+                    viewModel.openBottomSheet()
                 },
                 elevation = ButtonDefaults.elevation(0.dp, 0.dp, 0.dp),
                 shape = RoundedCornerShape(50),
@@ -135,7 +138,9 @@ fun HomeScreen(
             }
         },
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding).verticalScroll(scrollState)) {
+        Column(modifier = Modifier
+            .padding(innerPadding)
+            .verticalScroll(scrollState)) {
             uiState.listItem.forEach() {
                 ListItemView(item = it)
             }
@@ -151,7 +156,7 @@ fun HomeScreen(
             text = {
                 OutlinedTextField(
                     value = value,
-                    label = {  Text(locale("URI_Link"))},
+                    label = { Text(locale("URI_Link")) },
                     onValueChange = { value = it },
                     maxLines = 1,
                     modifier = Modifier.padding(10.dp),
@@ -176,38 +181,66 @@ fun HomeScreen(
         )
     }
     // 底部功能弹窗
-    if (openBottomSheet) {
-        val windowInsets =
-            if (edgeToEdgeEnabled) WindowInsets(0) else BottomSheetDefaults.windowInsets
+    if (homeUiState.openBottomSheet) {
         ModalBottomSheet(
-            onDismissRequest = { openBottomSheet = false },
+            onDismissRequest = {
+                viewModel.closeItemSettings()
+            },
             sheetState = bottomSheetState,
             windowInsets = windowInsets,
         ) {
             Column(
                 modifier = Modifier.padding(horizontal = 10.dp)
             ) {
-                Card(
-                    onClick = {
-                        openBottomSheet = !openBottomSheet
-                        onNavigateToScan()
-                    }
-                ) {
-                    ListItem(
-                        headlineContent = { Text(text = locale("Scan_QR_Code")) },
-                        leadingContent = {
-                            Icon(
-                                painter = painterResource(R.drawable.photo_camera),
-                                contentDescription = "Localized description",
-                            )
+
+                // itemSetting
+                if (homeUiState.openItemSettings) {
+                    //删除+修改+设置位置
+                    Card(
+                        onClick = {
+                            viewModel.closeBottomSheet()
+                            viewModel.removeListItem()
                         }
-                    )
+                    ) {
+                        ListItem(
+                            headlineContent = { Text(text = "删除") },
+                            leadingContent = {
+                                Icon(
+                                    imageVector = Icons.Filled.Delete,
+                                    contentDescription = "Localized description",
+                                )
+                            }
+                        )
+                    }
+                } else {
+                    Card(
+                        onClick = {
+                            viewModel.closeBottomSheet()
+                            onNavigateToScan()
+                        }
+                    ) {
+                        ListItem(
+                            headlineContent = { Text(text = locale("Scan_QR_Code")) },
+                            leadingContent = {
+                                Icon(
+                                    painter = painterResource(R.drawable.photo_camera),
+                                    contentDescription = "Localized description",
+                                )
+                            }
+                        )
+                    }
                 }
+
                 // 手动输入
                 Card(
                     onClick = {
-                        openBottomSheet = !openBottomSheet
-                        onNavigateToCode()
+                        if (homeUiState.openItemSettings) {
+                            onNavigateToCode()
+                        } else {
+                            viewModel.initCodeUiState()
+                            onNavigateToCode()
+                        }
+                        viewModel.closeBottomSheet()
                     }
                 ) {
                     ListItem(
@@ -220,22 +253,27 @@ fun HomeScreen(
                         }
                     )
                 }
-                Card(
-                    onClick = {
-                        openBottomSheet = !openBottomSheet
-                        openUriSheet = !openUriSheet
+                // itemSetting
+                if (homeUiState.openItemSettings) {
+                    //删除+修改+设置位置
+                } else {
+                    Card(
+                        onClick = {
+                            viewModel.closeBottomSheet()
+                            openUriSheet = !openUriSheet
 
-                    }
-                ) {
-                    ListItem(
-                        headlineContent = { Text(locale("parse_uri")) },
-                        leadingContent = {
-                            Icon(
-                                Icons.Filled.Email,
-                                contentDescription = "Localized description",
-                            )
                         }
-                    )
+                    ) {
+                        ListItem(
+                            headlineContent = { Text(locale("parse_uri")) },
+                            leadingContent = {
+                                Icon(
+                                    Icons.Filled.Email,
+                                    contentDescription = "Localized description",
+                                )
+                            }
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.navigationBarsPadding())
             }
