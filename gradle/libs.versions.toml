@@ -29,6 +29,7 @@ androidx-navigation-compose = "2.7.4"
 material-icons-core = "1.5.4"
 material-icons-extended = "1.5.4"
 matisse = "1.1.2"
+protobuf-kotlin = "3.25.1"
 room = "2.5.0"
 androidx-lifecycle = "2.6.2"
 ksp = "1.9.10-1.0.13"
@@ -63,6 +64,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 matisse = { module = "io.github.leavesczy:matisse", version.ref = "matisse" }
 mlkit-barcode-scanning = { module = "com.google.mlkit:barcode-scanning", version.ref = "google-barcode-scanning" }
 mlkit-text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "google-text-recognition" }
+protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "protobuf-kotlin" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }

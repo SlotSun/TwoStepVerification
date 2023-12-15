@@ -145,7 +145,7 @@ dependencies {
 
     //google
     implementation libs.guava
-    implementation libs.google.protobuf.javalite
+    implementation(libs.protobuf.kotlin)
     implementation libs.gson
 
     // jetpack material3 compose
