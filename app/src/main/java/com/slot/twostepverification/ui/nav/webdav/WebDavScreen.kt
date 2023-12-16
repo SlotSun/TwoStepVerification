@@ -108,7 +108,7 @@ fun WebDavView(
                 Column {
                     // webDav地址：默认坚果云
                     CtrTextField(
-                        str = LocalConfig.webDavUrl,
+                        value = LocalConfig.webDavUrl,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
@@ -119,7 +119,7 @@ fun WebDavView(
                     )
                     // WEBDAV 用户名
                     CtrTextField(
-                        str = LocalConfig.user,
+                       value = LocalConfig.user,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
@@ -129,7 +129,7 @@ fun WebDavView(
                         }
                     )
                     CtrTextField(
-                        str = LocalConfig.password,
+                        value = LocalConfig.password,
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
