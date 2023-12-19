@@ -16,6 +16,7 @@ import com.slot.twostepverification.utils.https.GSON
 import com.slot.twostepverification.utils.https.writeToOutputStream
 import com.slot.twostepverification.utils.isContentScheme
 import com.slot.twostepverification.help.WebDavHelper
+import com.slot.twostepverification.utils.data.DataStoreUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
@@ -42,7 +43,7 @@ object Backup {
 
     private val backupFileNames by lazy {
         arrayOf(
-//            "config.xml",
+            "config.json",
             "tsp.json"
         )
     }
@@ -76,7 +77,13 @@ object Backup {
                 }
             }
         }
-        // todo:将 preferences 中的数据填入config.json
+        // 将 preferences 中的数据填入config.json
+        DataStoreUtils.getAll().let {
+            GSON.toJson(it).let {json->
+                FileUtils.createFileIfNotExist(backupPath + File.separator + "config.json")
+                    .writeText(json)
+            }
+        }
 
         coroutineContext.ensureActive()
         val zipFileName = getNowZipFileName()

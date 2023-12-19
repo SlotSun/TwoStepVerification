@@ -36,8 +36,6 @@ object DataStoreUtils {
     }
 
 
-
-
     @Suppress("UNCHECKED_CAST")
     fun <U> getSyncData(key: String, default: U): U {
         val res = when (default) {
@@ -253,6 +251,13 @@ object DataStoreUtils {
         dataStore.edit {
             it.clear()
         }
+    }
+    // 获取全部数据
+    suspend fun getAll(): Map<Preferences.Key<*>, Any> {
+        val res = dataStore.data.map {
+            it.asMap()
+        }.first()
+        return res
     }
 
 

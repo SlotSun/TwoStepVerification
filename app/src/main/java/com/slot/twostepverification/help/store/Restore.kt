@@ -4,11 +4,13 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
+import com.google.gson.reflect.TypeToken
 import com.slot.twostepverification.const.LocalConfig
-import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.utils.AppLog
 import com.slot.twostepverification.utils.compress.ZipUtils
+import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.file.FileUtils
 import com.slot.twostepverification.utils.file.openInputStream
 import com.slot.twostepverification.utils.https.GSON
@@ -19,6 +21,7 @@ import com.slot.twostepverification.utils.showToasts
 import splitties.init.appCtx
 import java.io.File
 import java.io.FileInputStream
+import java.lang.reflect.Type
 
 /**
  * 恢复
@@ -67,7 +70,17 @@ object Restore {
             appCtx.showToasts("备份成功")
         }
         // todo: 恢复 DataStoreUtils中的数据
-
+        File(path, "config.json").takeIf {
+            it.exists()
+        }?.runCatching {
+            val json = readText()
+            Log.d("ConfigJson", json)
+            val type = object : TypeToken<Map<String, Any>>() {}.type
+            val res: Map<String, Any> = GSON.fromJson(json, type)
+            res.forEach { (key, value) ->
+                DataStoreUtils.putData(key= key, value = value)
+            }
+        }
     }
 
     private inline fun <reified T> fileToListT(path: String, fileName: String): List<T>? {
