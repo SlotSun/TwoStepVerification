@@ -23,7 +23,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.LOCALE
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.locales
@@ -43,7 +42,7 @@ fun localeSelector(
     AlertDialog(
         title = {
             Text(
-                text = localeState.value.getValue("Switch_Language"),
+                text = locale("Switch_Language"),
                 style = TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Normal),
             )
         },

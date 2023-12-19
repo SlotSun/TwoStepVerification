@@ -1,6 +1,6 @@
 package com.slot.twostepverification.const
 
-import com.slot.twostepverification.TwoApplication.Companion.localeState
+import com.slot.twostepverification.const.LocalConfig.localeState
 import java.util.Locale
 
 // todo:后续用object 实现
@@ -236,7 +236,7 @@ val locales: Map<String, Map<String, String>> = mapOf(
     "简体中文" to languageCN
 )
 
-inline fun locale(string: String): String {
+fun locale(string: String): String {
     return if (localeState.value.containsKey(string))
         localeState.value.getValue(string)
     else

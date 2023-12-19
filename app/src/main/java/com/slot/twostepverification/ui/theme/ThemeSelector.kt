@@ -28,11 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.slot.twostepverification.R
-import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.CHANGED_THEME
+import com.slot.twostepverification.const.LocalConfig.localeState
+import com.slot.twostepverification.const.LocalConfig.themeTypeState
 import com.slot.twostepverification.utils.data.DataStoreUtils
 
 data class ThemeModel(val color: Color, val colorId: Int, val colorName: String)

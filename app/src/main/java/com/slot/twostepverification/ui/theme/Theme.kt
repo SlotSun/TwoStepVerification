@@ -7,16 +7,13 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
-import com.slot.twostepverification.const.DYNAMIC_COLOR
-import com.slot.twostepverification.utils.data.DataStoreUtils
+import com.slot.twostepverification.const.LocalConfig.dynamicColorState
+import com.slot.twostepverification.const.LocalConfig.themeTypeState
 
 const val DYNAMIC_COLOR_SCHEME = "dynamicLightColorScheme"
 
@@ -41,15 +38,8 @@ const val CYAN_THEME = 8
 // 品红色
 const val MAGENTA_THEME = 9
 
-/**
- * 主题状态
- */
-val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-    mutableIntStateOf(getDefaultThemeId())
-}
-val dynamicColorState: MutableState<Boolean> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-    mutableStateOf(DataStoreUtils.getSyncData(DYNAMIC_COLOR,true))
-}
+
+
 @Composable
 fun getCurrentColors(): ColorScheme {
     val ctx = LocalContext.current
@@ -91,7 +81,7 @@ fun TwoStepVerificationTheme(
         }
     }
     MaterialTheme(
-        colorScheme= colorScheme,
+        colorScheme = colorScheme,
         typography = Typography,
         content = content
     )

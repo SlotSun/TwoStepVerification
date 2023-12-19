@@ -35,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.slot.twostepverification.TwoApplication.Companion.localeState
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.titleStyle
 import com.slot.twostepverification.const.ubTitleStyle

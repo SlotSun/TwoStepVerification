@@ -4,11 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import com.slot.twostepverification.R
 import com.slot.twostepverification.TwoApplication
 import com.slot.twostepverification.const.DYNAMIC_COLOR
 import com.slot.twostepverification.const.LOCALE
-import com.slot.twostepverification.ui.theme.dynamicColorState
+import com.slot.twostepverification.const.LocalConfig
+import com.slot.twostepverification.const.LocalConfig.localeState
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.showToast
 import com.slot.twostepverification.viewmodel.BaseViewModel
@@ -36,12 +37,12 @@ class ConfigViewModel : BaseViewModel() {
     // 开启动态取色
     fun setDynamicColor(it: Boolean, ctx: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && it) {
-            showToast(ctx, text = ctx.resources.getString(R.string.sorry_dynamic_color))
+            showToast(ctx, text = locale("sorry_dynamic_color"))
         }
-        dynamicColorState.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && it
-        DataStoreUtils.putSyncData(DYNAMIC_COLOR, dynamicColorState.value)
+        LocalConfig.dynamicColorState.value = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && it
+        DataStoreUtils.putSyncData(DYNAMIC_COLOR, LocalConfig.dynamicColorState.value)
         _uiState.update { state ->
-            state.copy(dynamicColorChecked = dynamicColorState.value)
+            state.copy(dynamicColorChecked = LocalConfig.dynamicColorState.value)
         }
     }
 
@@ -76,7 +77,7 @@ class ConfigViewModel : BaseViewModel() {
     }
     // 点击切换不重启app：微信是重绘activity：所以我决定采用i18n策略
     fun changeLocale(locale: Map<String, String>, key: String) {
-        TwoApplication.localeState.value = locale
+        localeState.value = locale
         DataStoreUtils.putSyncData(LOCALE, key)
     }
 

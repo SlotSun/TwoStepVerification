@@ -2,18 +2,37 @@ package com.slot.twostepverification.const
 
 import android.net.Uri
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.core.net.toUri
+import com.slot.twostepverification.ui.theme.getDefaultThemeId
 import com.slot.twostepverification.utils.data.DataStoreUtils
 
 
 object LocalConfig {
+    // 当前文字
+    val currentLanguage: MutableState<String> =
+        mutableStateOf(DataStoreUtils.getSyncData(LOCALE, "English"))
 
-    // 本地语言
-    var localLanguage
-        get() = DataStoreUtils.readStringData("LOCALE", default = "简体中文")
-        set(value) {
-            DataStoreUtils.putSyncData("LOCALE", value = value)
-        }
+    // 全局文字
+    val localeState: MutableState<Map<String, String>> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        mutableStateOf(
+            locales.getValue(
+                currentLanguage.value
+            )
+        )
+    }
+
+    // 主题状态
+    val themeTypeState: MutableState<Int> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        mutableIntStateOf(getDefaultThemeId())
+    }
+
+    // 动态颜色
+    val dynamicColorState: MutableState<Boolean> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        mutableStateOf(DataStoreUtils.getSyncData(DYNAMIC_COLOR, true))
+    }
     var recordLog
         get() = DataStoreUtils.readBooleanData("recordLog", default = false)
         set(value) {
@@ -35,6 +54,7 @@ object LocalConfig {
         set(value) {
             DataStoreUtils.saveSyncBooleanData("authIsOk", value)
         }
+
     /**
      *  最后一次备份时间
      */
