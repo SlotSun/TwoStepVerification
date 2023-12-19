@@ -136,7 +136,7 @@ class HomeViewModel : BaseViewModel() {
      * 拖拽列表项
      */
     fun dragItems(to:Int,from:Int){
-        val upItems = _uiState.value.listItem.toMutableList().apply {
+        val upItems = TwoHelper.itemState.value.listItem.toMutableList().apply {
             add(to,removeAt(from))
         }
         viewModelScope.launch{
