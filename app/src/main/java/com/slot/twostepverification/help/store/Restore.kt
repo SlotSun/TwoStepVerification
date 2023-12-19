@@ -1,10 +1,12 @@
 package com.slot.twostepverification.help.store
 
+import android.app.Application
 import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.google.gson.reflect.TypeToken
+import com.slot.twostepverification.TwoApplication
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.data.entity.VerificationItem
 import com.slot.twostepverification.help.TwoHelper
@@ -67,7 +69,7 @@ object Restore {
         }?.onFailure {
             AppLog.put("恢复二步验证出错\n${it.localizedMessage}", it)
         }?.onSuccess {
-            appCtx.showToasts("备份成功")
+            appCtx.showToasts("恢复备份成功")
         }
         // todo: 恢复 DataStoreUtils中的数据
         File(path, "config.json").takeIf {
@@ -80,6 +82,11 @@ object Restore {
             res.forEach { (key, value) ->
                 DataStoreUtils.putData(key= key, value = value)
             }
+        }?.onFailure {
+            AppLog.put("恢复配置出错\n${it.localizedMessage}", it)
+        }?.onSuccess {
+            TwoApplication.initUi()
+            appCtx.showToasts("恢复配置成功")
         }
     }
 

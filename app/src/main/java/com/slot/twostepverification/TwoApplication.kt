@@ -25,7 +25,17 @@ import com.slot.twostepverification.utils.https.setHttpClient
 
 class TwoApplication:Application() {
     companion object {
-
+        /**
+         *  初始化ui
+         */
+        fun initUi() {
+            //界面语言初始化
+            localeState.value = locales.getValue(DataStoreUtils.readStringData(key = LOCALE))
+            //界面主题初始化
+            themeTypeState.value = DataStoreUtils.readIntData(key = CHANGED_THEME)
+            // 是否动态主题
+            dynamicColorState.value = DataStoreUtils.readBooleanData(key = DYNAMIC_COLOR)
+        }
     }
 
     override fun onCreate() {
@@ -54,15 +64,5 @@ class TwoApplication:Application() {
         Coil.setImageLoader(imageLoader)
     }
 
-    /**
-     *  初始化ui
-     */
-    fun initUi() {
-        //界面语言初始化
-        localeState.value = locales.getValue(DataStoreUtils.readStringData(key = LOCALE))
-        //界面主题初始化
-        themeTypeState.value = DataStoreUtils.readIntData(key = CHANGED_THEME)
-        // 是否动态主题
-        dynamicColorState.value = DataStoreUtils.readBooleanData(key = DYNAMIC_COLOR)
-    }
+
 }
