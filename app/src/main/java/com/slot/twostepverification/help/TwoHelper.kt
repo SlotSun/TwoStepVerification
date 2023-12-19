@@ -40,8 +40,9 @@ object TwoHelper {
         // 合并原来数据 去重
         val insItems = mutableListOf<VerificationItem>()
         val res = insItems.let {
-            it.addAll(_itemState.value.listItem)
+            // 以新插入顺序为主
             it.addAll(items)
+            it.addAll(_itemState.value.listItem)
             it.distinct()
         }
         updateItemState(res)

@@ -89,6 +89,11 @@ protobuf {
 
 dependencies {
 
+    // 拖动列表
+    // https://mvnrepository.com/artifact/org.burnoutcrew.composereorderable/reorderable
+    implementation 'org.burnoutcrew.composereorderable:reorderable:0.9.6'
+
+
     // Splitties：简化kotlin代码的库
     implementation("com.louiscad.splitties:splitties-appctx:3.0.0")
     implementation("com.louiscad.splitties:splitties-systemservices:3.0.0")

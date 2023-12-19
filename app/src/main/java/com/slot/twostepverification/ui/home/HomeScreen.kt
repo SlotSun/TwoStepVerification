@@ -1,5 +1,7 @@
 package com.slot.twostepverification.ui.home
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +10,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +49,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -61,6 +66,10 @@ import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.ui.home.components.ListItemView
 import com.slot.twostepverification.utils.showToast
+import org.burnoutcrew.reorderable.ReorderableItem
+import org.burnoutcrew.reorderable.detectReorderAfterLongPress
+import org.burnoutcrew.reorderable.rememberReorderableLazyListState
+import org.burnoutcrew.reorderable.reorderable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
@@ -75,8 +84,6 @@ fun HomeScreen(
     val uiState by TwoHelper.itemState.collectAsStateWithLifecycle()
     val homeUiState by viewModel.uiState.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
-    val scope = rememberCoroutineScope()
-    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
     val skipPartiallyExpanded by remember { mutableStateOf(false) }
     var openUriSheet by rememberSaveable { mutableStateOf(false) }
     val edgeToEdgeEnabled by remember { mutableStateOf(false) }
@@ -85,6 +92,13 @@ fun HomeScreen(
 
     val bottomSheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = skipPartiallyExpanded
+    )
+
+    // 拖动列表
+    val recordState = rememberReorderableLazyListState(
+        onMove = { from, to ->
+            viewModel.dragItems(to = to.index, from = from.index)
+        }
     )
 
 
@@ -138,11 +152,31 @@ fun HomeScreen(
             }
         },
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .verticalScroll(scrollState)) {
-            uiState.listItem.forEach() {
-                ListItemView(item = it)
+//        Column(modifier = Modifier
+//            .padding(innerPadding)
+//            .verticalScroll(scrollState)) {
+//            uiState.listItem.forEach() {
+//                ListItemView(item = it)
+//            }
+//        }
+        LazyColumn(
+            state = recordState.listState,
+            modifier = Modifier
+                .padding(innerPadding)
+                .reorderable(recordState)
+                .detectReorderAfterLongPress(recordState)
+        ) {
+            items(uiState.listItem, { it }) { item ->
+                ReorderableItem(reorderableState = recordState, key = item) { isDragging ->
+                    val elevation = animateDpAsState(if (isDragging) 16.dp else 0.dp, label = "")
+                    Column(
+                        modifier = Modifier
+                            .shadow(elevation.value)
+                            .background(MaterialTheme.colorScheme.surface)
+                    ) {
+                        ListItemView(item = item)
+                    }
+                }
             }
         }
     }
