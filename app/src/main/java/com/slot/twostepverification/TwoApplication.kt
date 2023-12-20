@@ -23,14 +23,21 @@ import com.slot.twostepverification.utils.https.OkHelper
 import com.slot.twostepverification.utils.https.setBaseUrl
 import com.slot.twostepverification.utils.https.setHttpClient
 
-class TwoApplication:Application() {
+class TwoApplication : Application() {
     companion object {
         /**
          *  初始化ui
          */
         fun initUi() {
             //界面语言初始化
-            localeState.value = locales.getValue(DataStoreUtils.readStringData(key = LOCALE))
+            val locale = DataStoreUtils.readStringData(key = LOCALE)
+            localeState.value = locales.getValue(
+                if (locale == "") {
+                    "English"
+                } else {
+                    locale
+                }
+            )
             //界面主题初始化
             themeTypeState.value = DataStoreUtils.readIntData(key = CHANGED_THEME)
             // 是否动态主题
@@ -49,6 +56,7 @@ class TwoApplication:Application() {
         initUi()
         initCoil(context = this)
     }
+
     /**
      * 初始化图片选择引擎
      */
