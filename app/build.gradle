@@ -10,6 +10,14 @@ android {
     namespace 'com.slot.twostepverification'
     compileSdk 34
 
+    signingConfigs {
+        release {
+            storeFile storeFile
+            storePassword storePassword
+            keyAlias keyAlias
+            keyPassword keyPassword
+        }
+    }
     defaultConfig {
         applicationId "com.slot.twostepverification"
         minSdk 29
@@ -46,8 +54,14 @@ android {
 
         release {
             applicationIdSuffix '.release'
-            minifyEnabled false
+            signingConfig signingConfigs.release    //签名
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                //noinspection ChromeOsAbiSupport
+                abiFilters 'arm64-v8a'
+            }
         }
     }
     compileOptions {

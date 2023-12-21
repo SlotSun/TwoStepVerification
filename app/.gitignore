@@ -16,3 +16,5 @@ migrate_working_dir/
 *.iws
 .idea/
 /build/
+/release
+/mapping.txt
