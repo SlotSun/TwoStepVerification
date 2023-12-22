@@ -19,7 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--optimizationpasses 5                                                           # 代码混淆的压缩比例，值介于0-7，默认5
 -verbose                                                                        # 混淆时记录日志
 #-dontshrink                                                                     # 关闭压缩
 -dontpreverify                                                                  # 关闭预校验(作用于Java平台，Android不需要，去掉可加快混淆)
@@ -33,9 +32,9 @@
 -allowaccessmodification                                                        # 优化时允许访问并修改有修饰符的类及类的成员
 -renamesourcefileattribute SourceFile                                           # 将源码中有意义的类名转换成SourceFile，用于混淆具体崩溃代码
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*        # 指定混淆时采用的算法
--keepattributes *Annotation*d,InnerClasses                                      # 保留注解、内部类
 -keepattributes Signature                                                       # 保留泛型
 -keepattributes SourceFile,LineNumberTable                                      # 抛出异常时保留代码行号，在异常分析中可以方便定位
+
 
 # 指定外部模糊字典
 -obfuscationdictionary ./dictionary
@@ -44,39 +43,37 @@
 # 指定package模糊字典
 -packageobfuscationdictionary ./dictionary
 
-#保留四大组件相关
--keep public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class * extends android.app.backup.BackupAgentHelper
--keep public class * extends android.preference.Preference
--keep public class * extends android.view.View
-
-# 保留support下的类的继承类及其内部类
--keep public class * extends android.support.v4.*
--keep public class * extends android.support.v7.*
--keep public class * extends android.support.annotation.*
 
 # 保留R下面的资源
 -keep class **.R$* {*;}
 
-# 保留枚举类不被混淆
+# 数据类
+-keep class **.data.**{*;}
+
+-keep class com.slot.twostepverification.help.store.**{*;}
+
+# hutool-core hutool-crypto
+-keep class cn.hutool.core.**{*;}
+-keep class cn.hutool.crypto.**{*;}
+-keep class org.bouncycastle.**{*;}
+-dontwarn cn.hutool.**
+
+-keep class android.support.**{*;}
+
+# 保留本地native方法不被混淆
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keepclassmembers class * {
+    public <init> (org.json.JSONObject);
+}
+
+# 枚举类
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
-# 数据类
--keep class **.data.**{*;}
-# hutool-core hutool-crypto
--keep class cn.hutool.core.**{*;}
--keep class cn.hutool.crypto.**{*;}
--dontwarn cn.hutool.**
-# 缓存 Cookie
--keep class **.utils.https.CookieJar{*;}
--keep class **.utils.https.CacheManager{*;}
-
 
 # 保留Parcelable序列化类不被混淆
 -keep class * implements android.os.Parcelable {
@@ -109,30 +106,13 @@
 
 ##----------------------------------------- 第三方依赖库 --------------------------------------------
 #----------------------------- gson ---------------------------------
-# Gson specific classes
--dontwarn sun.misc.**
-# Prevent proguard from stripping interface information from TypeAdapterFactory,
-# JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)
--keep class * implements com.google.gson.TypeAdapterFactory
--keep class * implements com.google.gson.JsonSerializer
--keep class * implements com.google.gson.JsonDeserializer
-# Prevent R8 from leaving Data object members always null
--keepclassmembers,allowobfuscation class * {
-  @com.google.gson.annotations.SerializedName <fields>;
-}
+-keep,allowobfuscation,allowshrinking class com.google.gson.** { *; }
+-keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
 
 #----------------------------- okhttp ---------------------------------
-# JSR 305 annotations are for embedding nullability information.
--dontwarn javax.annotation.**
-# A resource is loaded with a relative path so the package of this class must be preserved.
--adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
-# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
--dontwarn org.codehaus.mojo.animal_sniffer.*
-# OkHttp platform used only on JVM and when Conscrypt and other security providers are available.
--dontwarn okhttp3.internal.platform.**
--dontwarn org.conscrypt.**
--dontwarn org.bouncycastle.**
--dontwarn org.openjsse.**
+-dontwarn okhttp3.**
+-keep class okhttp3.**{*;}
+
 
 
 #---------------------------- retrofit --------------------------------
@@ -177,20 +157,31 @@
 -keep,allowobfuscation,allowshrinking interface retrofit2.Call
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
 
--keep,allowobfuscation,allowshrinking class kotlin.coroutines.**{*;}
-
-
--keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
--keep class org.burnoutcrew.reorderable.**{*;}
-
+-keep class javax.swing.**{*;}
+-dontwarn javax.swing.**
+-keep class java.awt.**{*;}
+-dontwarn java.awt.**
+-keep class sun.misc.**{*;}
+-dontwarn sun.misc.**
 -keep class org.slf4j.**{*;}
 -dontwarn org.slf4j.**
-
 -keep class sun.reflect.**{*;}
 -dontwarn sun.reflect.**
+
+##JSOUP
+-keep class org.jsoup.**{*;}
+-keep class **.xpath.**{*;}
+
+# Android support library annotations will get converted to androidx ones
+# which we want to keep.
+-keep @interface androidx.annotation.Keep
+-keep @androidx.annotation.Keep class *
 
 # error  Library class android.content.res.XmlResourceParser implements program class org.xmlpull.v1.XmlPullParser
 -dontwarn org.xmlpull.v1.**
 -dontwarn org.kxml2.io.**
 -dontwarn android.content.res.**
 -dontwarn org.slf4j.impl.StaticLoggerBinder
+
+-keep class org.xmlpull.** { *; }
+-keepclassmembers class org.xmlpull.** { *; }

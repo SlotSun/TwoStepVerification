@@ -1,20 +1,16 @@
 package com.slot.twostepverification.ui.nav
 
-import android.content.Context
 import android.net.Uri
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.help.WebDavHelper
 import com.slot.twostepverification.help.store.Backup
-import com.slot.twostepverification.help.store.Restore
 import com.slot.twostepverification.utils.AppLog
 import com.slot.twostepverification.utils.permission.Permissions
 import com.slot.twostepverification.utils.showToasts
-import io.legado.app.help.coroutine.Coroutine
+import com.slot.twostepverification.utils.coroutine.Coroutine
 import com.slot.twostepverification.utils.permission.PermissionsCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
@@ -25,7 +21,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import splitties.init.appCtx
-import kotlin.coroutines.coroutineContext
 
 data class NavUiState(
     val filePath: Uri? = null,

@@ -2,6 +2,7 @@ package com.slot.twostepverification.help.store
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.Keep
 import androidx.documentfile.provider.DocumentFile
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.help.TwoHelper

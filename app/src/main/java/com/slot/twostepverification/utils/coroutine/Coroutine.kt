@@ -1,4 +1,4 @@
-package io.legado.app.help.coroutine
+package com.slot.twostepverification.utils.coroutine
 
 import com.slot.twostepverification.utils.log.printOnDebug
 import kotlinx.coroutines.CancellationException

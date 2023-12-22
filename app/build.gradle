@@ -55,12 +55,11 @@ android {
         release {
             applicationIdSuffix '.release'
             signingConfig signingConfigs.release    //签名
-            minifyEnabled true
             shrinkResources true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             ndk {
-                //noinspection ChromeOsAbiSupport
-                abiFilters 'arm64-v8a'
+                abiFilters 'x86_64'
             }
         }
     }
@@ -68,8 +67,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = '17'
+    kotlin{
+        jvmToolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
     buildFeatures {
         buildConfig true
@@ -102,7 +103,7 @@ protobuf {
 
 
 dependencies {
-
+    compileOnly "com.android.tools.build:gradle:$agp_version"
     // 拖动列表
     // https://mvnrepository.com/artifact/org.burnoutcrew.composereorderable/reorderable
     implementation 'org.burnoutcrew.composereorderable:reorderable:0.9.6'
@@ -123,7 +124,7 @@ dependencies {
     api(libs.kotlinx.coroutines)
 
     // https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.76'
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.75")
 
     //规则相关
     implementation('org.jsoup:jsoup:1.16.1')

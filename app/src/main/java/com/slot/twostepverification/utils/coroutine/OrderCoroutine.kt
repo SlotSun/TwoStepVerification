@@ -1,4 +1,4 @@
-package io.legado.app.help.coroutine
+package com.slot.twostepverification.utils.coroutine
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO

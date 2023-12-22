@@ -1,4 +1,5 @@
-package io.legado.app.help.coroutine
+package com.slot.twostepverification.utils.coroutine
+
 
 internal interface CoroutineContainer {
 

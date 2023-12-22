@@ -1,4 +1,4 @@
-package io.legado.app.help.coroutine
+package com.slot.twostepverification.utils.coroutine
 
 @Suppress("unused")
 class CompositeCoroutine : CoroutineContainer {

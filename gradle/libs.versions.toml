@@ -2,7 +2,7 @@
 accompanist = "0.32.0"
 accompanist-permissions = "0.33.2-alpha"
 activity-ktx = "1.7.2"
-agp = "8.3.0-alpha08"
+agp = "8.1.1"
 androidx-camera-camera-view2 = "1.2.2"
 androidx-camera-camera-camera22 = "1.2.2"
 androidx-camera-camera-lifecycle2 = "1.2.2"
