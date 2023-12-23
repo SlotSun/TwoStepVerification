@@ -1,5 +1,6 @@
 package com.slot.twostepverification.ui.nav
 
+import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import com.slot.twostepverification.utils.AppLog
 import com.slot.twostepverification.utils.permission.Permissions
 import com.slot.twostepverification.utils.showToasts
 import com.slot.twostepverification.utils.coroutine.Coroutine
+import com.slot.twostepverification.utils.isContentScheme
 import com.slot.twostepverification.utils.permission.PermissionsCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
@@ -53,6 +55,12 @@ class NavViewModel : ViewModel() {
     fun selectFilePath(uri: Uri?) {
         // 存进preferences
         uri?.let { it ->
+            // 持久化文件夹权限
+            if (it.isContentScheme()) {
+                val modeFlags =
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                appCtx.contentResolver.takePersistableUriPermission(it, modeFlags)
+            }
             LocalConfig.filePath = it
             _uiState.update {
                 it.copy(
@@ -102,7 +110,8 @@ class NavViewModel : ViewModel() {
         _uiState.update {
             it.copy(
                 isShowLoading = false,
-                isSelectRestoreFileFromWebDav = false)
+                isSelectRestoreFileFromWebDav = false
+            )
         }
     }
 

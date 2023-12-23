@@ -56,6 +56,10 @@ import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.titleStyle
 import com.slot.twostepverification.const.ubTitleStyle
+import com.slot.twostepverification.utils.camera.utils.PermissionClickView
+import com.slot.twostepverification.utils.camera.utils.PermissionView
+import com.slot.twostepverification.utils.camera.utils.StorePermissionTextProvider
+import com.slot.twostepverification.utils.permission.Permissions
 
 /**
  *  数据备份页面
@@ -69,9 +73,7 @@ fun NavScreen(
 ) {
     val navUiState by viewModel.uiState.collectAsStateWithLifecycle()
     // 手动选择备份目录
-    var filePath by remember { mutableStateOf<Uri?>(LocalConfig.filePath) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
-        filePath = it
         viewModel.selectFilePath(it)
     }
     val ctx = LocalContext.current
@@ -230,7 +232,9 @@ fun NavScreen(
                 },
                 supportingContent = {
                     Text(
-                        text = if (LocalConfig.isWebDavLogin) "Login:${LocalConfig.user}" else locale("You_may_need_a_reliable_network_connection"),
+                        text = if (LocalConfig.isWebDavLogin) "Login:${LocalConfig.user}" else locale(
+                            "You_may_need_a_reliable_network_connection"
+                        ),
                         style = ubTitleStyle
                     )
                 }
@@ -304,6 +308,8 @@ fun NavScreen(
                     )
                 }
             )
+
+
             // 恢复备份
             ListItem(
                 modifier = Modifier

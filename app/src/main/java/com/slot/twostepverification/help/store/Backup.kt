@@ -69,7 +69,7 @@ object Backup {
         FileUtils.delete(backupPath)
         // 输出所有的items
         TwoHelper.getItems().let {
-            GSON.toJson(it).let{json->
+            GSON.toJson(it).let { json ->
                 aes.runCatching {
                     encryptBase64(json)
                 }.getOrDefault(json).let {
@@ -80,7 +80,7 @@ object Backup {
         }
         // 将 preferences 中的数据填入config.json
         DataStoreUtils.getAll().let {
-            GSON.toJson(it).let {json->
+            GSON.toJson(it).let { json ->
                 FileUtils.createFileIfNotExist(backupPath + File.separator + "config.json")
                     .writeText(json)
             }
