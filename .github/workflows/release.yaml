@@ -17,8 +17,8 @@ jobs:
           fi
       - id: gradle-version
         run: |
-          echo "version=$(grep -oP '(?<=version ").*(?=")' $GITHUB_WORKSPACE/app/build.gradle)" >> $GITHUB_OUTPUT
-  
+#          echo "version=$(grep -oP '(?<=version ").*(?=")' $GITHUB_WORKSPACE/app/build.gradle)" >> $GITHUB_OUTPUT
+          echo "version=$(date -d "8 hour" -u +3.%y.%m%d%H)" >> $GITHUB_OUTPUT
 
   build:
     needs: prepare
@@ -42,8 +42,6 @@ jobs:
 
       - name: Release Apk Sign
         run: |
-          # not use this output
-          # echo "KeyStore=yes" >> $GITHUB_OUTPUT
           echo keyAlias ='${{ secrets.RELEASE_KEY_ALIAS }}' >> gradle.properties
           echo keyPassword ='${{ secrets.RELEASE_KEY_PASSWORD }}' >> gradle.properties
           echo storePassword ='${{ secrets.RELEASE_STORE_PASSWORD }}' >> gradle.properties
