@@ -14,11 +14,13 @@ android {
     compileSdk 34
 
     signingConfigs {
-        release {
-            storeFile storeFile
-            storePassword storePassword
-            keyAlias keyAlias
-            keyPassword keyPassword
+        if (project.hasProperty("storeFile")){
+            release {
+                storeFile storeFile
+                storePassword storePassword
+                keyAlias keyAlias
+                keyPassword keyPassword
+            }
         }
     }
     defaultConfig {
@@ -53,10 +55,11 @@ android {
             debuggable true
         }
 
-
         release {
             applicationIdSuffix '.release'
-            signingConfig signingConfigs.release    //签名
+            if (project.hasProperty("storeFile")){
+                signingConfig signingConfigs.release    //签名
+            }
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
