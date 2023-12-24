@@ -17,8 +17,7 @@ jobs:
           fi
       - id: gradle-version
         run: |
-          version=$(grep -oP '(?<=version ").*(?=")' $GITHUB_WORKSPACE/app/build.gradle)
-          echo "version= ${{ version }}" >> $GITHUB_OUTPUT
+          echo "version=$(grep -oP '(?<=version ").*(?=")' $GITHUB_WORKSPACE/app/build.gradle)" >> $GITHUB_OUTPUT
   
 
   build:
