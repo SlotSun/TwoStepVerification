@@ -229,7 +229,7 @@ fun HomeScreen(
                     //删除+修改+设置位置
                     Card(
                         onClick = {
-                            viewModel.closeBottomSheet()
+                            viewModel.closeItemSettings()
                             viewModel.removeListItem()
                         }
                     ) {
@@ -271,7 +271,7 @@ fun HomeScreen(
                             viewModel.initCodeUiState()
                             onNavigateToCode()
                         }
-                        viewModel.closeBottomSheet()
+                        viewModel.closeItemSettings()
                     }
                 ) {
                     ListItem(
