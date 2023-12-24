@@ -70,7 +70,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-
+    lint {
+        checkDependencies true
+    }
     //noinspection GrDeprecatedAPIUsage
     flavorDimensions = ['mode']
     // 打包输出路径
