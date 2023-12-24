@@ -82,8 +82,8 @@ jobs:
           name: tsv_app_${{ env.version }}
           tag_name: v${{ env.version }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
-          draft: false
-          prerelease: true
+          draft: true
+          prerelease: false
           files: ${{ github.workspace }}/apk/TSV_app_*.apk
 
 
