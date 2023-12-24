@@ -45,7 +45,7 @@ jobs:
           echo "keyPassword ='${{ secrets.RELEASE_KEY_PASSWORD }}'" >> gradle.properties
           echo "storePassword ='${{ secrets.RELEASE_STORE_PASSWORD }}'" >> gradle.properties
           echo "storeFile='./key.jks'" >> gradle.properties
-          echo ${{ secrets.RELEASE_KEY_STORE }} | openssl base64 --decode > $GITHUB_WORKSPACE/app/key.jks
+          echo ${{ secrets.RELEASE_KEY_STORE }} | base64 --decode > $GITHUB_WORKSPACE/app/key.jks
 
       - name: Unify Version Name
         run: |
