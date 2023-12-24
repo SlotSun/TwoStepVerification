@@ -20,6 +20,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -32,12 +33,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.const.VIEW_CLICK_INTERVAL_TIME
 import com.slot.twostepverification.const.locale
@@ -73,24 +77,40 @@ fun ListItemView(item: VerificationItem, viewModel: HomeViewModel = viewModel())
     val digits = item.length!!
     val period = item.time!!
     val secret = item.key!!
-    LaunchedEffect(Unit) {
+    fun getToken(){
         token = try {
             TotpInfo(secret, algorithm, digits, period).getOtp()
         } catch (e: Exception) {
             e.toString()
         }
     }
+    // 获取当前组件的生命周期
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = object : DefaultLifecycleObserver{
+            override fun onResume(owner: LifecycleOwner) {
+               getToken()
+            }
+        }
+        // 添加生命周期观察者
+        lifecycleOwner.lifecycle.addObserver(observer)
+        // 在 DisposableEffect 释放时移除生命周期观察者
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        getToken()
+    }
+
     // 每30s获取一次
     SideEffect {
         beginTime = (1 - (TotpInfo.getMillisTillNextRotation(30).toFloat()) / (30 * 1000L))
         //动画不能为0
         lastTime = (beginTime * 30 * 1000L + 1).toInt()
         if (process.value <= preValue && item.type == "TOTP") {
-            token = try {
-                TotpInfo(secret, algorithm, digits, period).getOtp()
-            } catch (e: Exception) {
-                e.toString()
-            }
+           getToken()
             //记录当前刷新时间 第二次调用直接从0开始 ：process从0->1递增
             Log.d("got", preValue.toString())
         }
