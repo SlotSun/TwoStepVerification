@@ -82,6 +82,8 @@ jobs:
           draft: false
           prerelease: false
           files: ${{ github.workspace }}/apk/tsv_app_*.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Assets To "release" Branch
         if: ${{ github.actor == 'SlotSun' }}
