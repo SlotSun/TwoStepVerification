@@ -1,9 +1,9 @@
 plugins {
     id "com.android.application"
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.kotlinParcelize)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.protobuf)
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp'
+    id 'com.google.protobuf'
 }
 
 def name = "TSV"
