@@ -24,7 +24,7 @@ jobs:
     if: ${{ needs.prepare.outputs.sign }}
     strategy:
       matrix:
-        product: [ app, google ]
+        product: [ app ]
       fail-fast: false
     runs-on: ubuntu-latest
     env:
