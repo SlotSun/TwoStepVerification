@@ -77,12 +77,12 @@ jobs:
         if: ${{ env.product == 'app' }}
         uses: softprops/action-gh-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
         with:
           name: tsv_app_${{ env.version }}
           tag_name: v${{ env.version }}
           body_path: ${{ github.workspace }}/CHANGELOG.md
-          draft: true
+          draft: flase
           prerelease: false
           files: ${{ github.workspace }}/apk/TSV_app_*.apk
 
