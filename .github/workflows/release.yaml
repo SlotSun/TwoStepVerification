@@ -85,17 +85,3 @@ jobs:
           draft: flase
           prerelease: false
           files: ${{ github.workspace }}/apk/TSV_app_*.apk
-
-
-      - name: Push Assets To "release" Branch
-        if: ${{ github.actor == 'SlotSun' }}
-        run: |
-          cd $GITHUB_WORKSPACE/apk/
-          git init
-          git checkout -b release
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git remote add origin "https://${{ github.actor }}:${{ secrets.ACTIONS_TOKEN }}@github.action/${{ github.actor }}/release"
-          git add *.apk
-          git commit -m "${{ env.version }}"
-          git push -f -u origin release       
