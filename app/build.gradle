@@ -14,12 +14,16 @@ android {
     compileSdk 34
 
     signingConfigs {
-        if (project.hasProperty("storeFile")){
+        if (project.hasProperty("releaseStoreFile")){
             release {
-                storeFile file(storeFile)
-                storePassword storePassword
-                keyAlias keyAlias
-                keyPassword keyPassword
+                storeFile file(releaseStoreFile)
+                storePassword releaseStorePassword
+                keyAlias releaseKeyAlias
+                keyPassword releaseKeyPassword
+                v1SigningEnabled true
+                v2SigningEnabled true
+                enableV3Signing = true
+                enableV4Signing = true
             }
         }
     }
@@ -67,6 +71,7 @@ android {
                 //abiFilters 'x86_64','arm64-v7a'
                 abiFilters 'arm64-v8a'
             }
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
