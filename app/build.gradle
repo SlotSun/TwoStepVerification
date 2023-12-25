@@ -61,7 +61,7 @@ android {
 
         release {
             applicationIdSuffix '.release'
-            if (project.hasProperty("storeFile")){
+            if (project.hasProperty("releaseStoreFile")){
                 signingConfig signingConfigs.release    //签名
             }
             shrinkResources true
