@@ -71,7 +71,6 @@ android {
                 //abiFilters 'x86_64','arm64-v7a'
                 abiFilters 'arm64-v8a'
             }
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {
