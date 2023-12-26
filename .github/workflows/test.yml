@@ -47,17 +47,12 @@ jobs:
           echo releaseStoreFile='./key.jks' >> gradle.properties
           echo ${{ secrets.RELEASE_KEY_STORE }} | base64 --decode > $GITHUB_WORKSPACE/app/key.jks
 
-      - name: Test properties
-        run: |
-          if 
 
       - name: Unify Version Name
         run: |
           echo "统一版本号"
           sed "/def version/c def version = \"${{ env.version }}\"" $GITHUB_WORKSPACE/app/build.gradle  -i
 
-      - name: Set up Gradle
-        uses: gradle/gradle-build-action@v2
 
   check_release_store_password:
     runs-on: ubuntu-latest
