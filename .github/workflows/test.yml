@@ -60,5 +60,10 @@ jobs:
           else
             echo "releaseStorePassword does not exist"
           fi
-      
+
+      - name: Upload App To Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tsv_pro
+          path: gradle.properties
     
