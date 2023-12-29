@@ -1,23 +1,18 @@
 package com.slot.twostepverification
 
 import android.app.Application
-import android.app.LocaleConfig
 import android.content.Context
 import android.graphics.Bitmap
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.text.intl.Locale
 import coil.Coil
 import coil.ImageLoader
 import com.slot.twostepverification.const.CHANGED_THEME
 import com.slot.twostepverification.const.DYNAMIC_COLOR
 import com.slot.twostepverification.const.LOCALE
-import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.LocalConfig.dynamicColorState
 import com.slot.twostepverification.const.LocalConfig.localeState
 import com.slot.twostepverification.const.LocalConfig.themeTypeState
 import com.slot.twostepverification.const.locales
-import com.slot.twostepverification.ui.theme.getDefaultThemeId
 import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.https.OkHelper
 import com.slot.twostepverification.utils.https.setBaseUrl
@@ -31,8 +26,9 @@ class TwoApplication : Application() {
         fun initUi() {
             //界面语言初始化
             val locale = DataStoreUtils.readStringData(key = LOCALE)
+            val localeNative  = Locale.current.language
             localeState.value = locales.getValue(
-                if (locale == "") {
+                if (locale == "" && localeNative == "en") {
                     "English"
                 } else {
                     locale
