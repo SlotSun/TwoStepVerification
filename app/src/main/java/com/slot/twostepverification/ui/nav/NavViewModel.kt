@@ -98,7 +98,7 @@ class NavViewModel : ViewModel() {
                 }
             } else {
                 AppLog.put("请先登录WEBDAV")
-                appCtx.showToasts("请先登录WEBDAV")
+                appCtx.showToasts(locale("Notice_WebDAV_first"))
             }
         }
 

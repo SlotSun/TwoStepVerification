@@ -1,10 +1,10 @@
 package com.slot.twostepverification.ui.code
 
 import androidx.lifecycle.viewModelScope
-import com.slot.twostepverification.help.TwoHelper
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.data.entity.VerificationItem
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.utils.encoding.Base32
-import com.slot.twostepverification.utils.showToasts
 import com.slot.twostepverification.utils.widget.TextFieldController
 import com.slot.twostepverification.viewmodel.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,11 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import splitties.init.appCtx
 
 
 data class CodeUiState(
-    var type:String ="TOTP",
+    var type: String = "TOTP",
     var name: String = "",
     var vindor: String = "",
     var key: String = "",
@@ -24,47 +23,50 @@ data class CodeUiState(
     var count: Int = 0,
     var digits: Int = 6,
     var sha: String = "SHA1",
-    val edit:Boolean = true,
+    val edit: Boolean = true,
 )
+
 val codeUiState = MutableStateFlow(CodeUiState())
+
 class CodeViewModel : BaseViewModel() {
     private val nameControllerState = MutableStateFlow(
         TextFieldController(
             isError = false,
-            supportingText = "please input website account",
-            errorMessage = "account can't be null"
+            supportingText = locale("please input website account"),
+            errorMessage = locale("account can't be null")
         )
     )
     private val vindorControllerState = MutableStateFlow(
         TextFieldController(
             isError = false,
-            supportingText = "please input vendor",
-            errorMessage = "vendor can't be null"
+            supportingText = locale("please input vendor"),
+            errorMessage = locale("vendor can't be null")
         )
     )
     private val keyControllerState = MutableStateFlow(
         TextFieldController(
             isError = false,
-            supportingText = "please input key",
-            errorMessage = "key can't be null"
+            supportingText = locale("please input key"),
+            errorMessage = locale("key can't be null")
         )
     )
     private val timeControllerState = MutableStateFlow(
         TextFieldController(
             isError = false,
-            supportingText = "please input time",
-            errorMessage = "time can't be null"
+            supportingText = locale("please input time"),
+            errorMessage = locale("time can't be null")
         )
     )
     val nameTextFieldController: StateFlow<TextFieldController> = nameControllerState.asStateFlow()
-    val vindorTextFieldController: StateFlow<TextFieldController> = vindorControllerState.asStateFlow()
+    val vindorTextFieldController: StateFlow<TextFieldController> =
+        vindorControllerState.asStateFlow()
     val keyTextFieldController: StateFlow<TextFieldController> = keyControllerState.asStateFlow()
     val timeTextFieldController: StateFlow<TextFieldController> = timeControllerState.asStateFlow()
 
     val uiState: StateFlow<CodeUiState> = codeUiState.asStateFlow()
 
 
-   private fun updateItem() {
+    private fun updateItem() {
         val item = VerificationItem(
             type = uiState.value.type,
             name = uiState.value.name,
@@ -81,16 +83,17 @@ class CodeViewModel : BaseViewModel() {
             TwoHelper.updateItems(items)
         }
     }
+
     // 提交
-    fun submit():Boolean{
+    fun submit(): Boolean {
         var res = verify()
-        if(res){
+        if (res) {
             updateItem()
         }
         return res
     }
 
-    private fun verify():Boolean {
+    private fun verify(): Boolean {
         var valid = false
         viewModelScope.launch {
             nameControllerState.update {
@@ -107,13 +110,13 @@ class CodeViewModel : BaseViewModel() {
                 )
             }
             keyControllerState.update {
-                var errorStr = "key can't be null"
+                var errorStr = locale("key can't be null")
                 val isError = if (uiState.value.name.isEmpty()) true else {
                     try {
                         Base32.decode(uiState.value.key)
                         false
                     } catch (e: Exception) {
-                        errorStr = "Access Key is not a valid Base32 encoding"
+                        errorStr = locale("Access Key is not a valid Base32 encoding")
                         true
                     }
                 }

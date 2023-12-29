@@ -243,7 +243,7 @@ class GoogleAuth {
                 }
                 val digits = uri.getQueryParameter("digits")
                 if (digits != null) {
-                    info.digits = digits.toInt()
+                    info.setDigits(digits.toInt())
                 }
             } catch (e: OtpInfoException) {
                 throw GoogleAuthInfoException(uri, e)
@@ -253,7 +253,7 @@ class GoogleAuth {
                     type = type,
                     name = accountName,
                     vendor = issuer,
-                    key = info.secret,
+                    key = info.getSecret(),
                     time = 30,
                     length = 6,
                     sha = info.getAlgorithm(false),

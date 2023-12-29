@@ -128,6 +128,16 @@ val languageEN: Map<String, String> = mapOf(
     "Sync" to "Sync",
     "SyncFromLastBackup" to "Sync form last backup",
     "Copied" to "Copied!",
+    // code Ui notice
+    "please input website account" to "please input website account",
+    "account can't be null" to "account can't be null",
+    "please input vendor" to "please input vendor",
+    "vendor can't be null" to "vendor can't be null",
+    "please input access key" to "please input access key",
+    "access key can't be null" to "access key can't be null",
+    "please input time interval" to "please input time interval",
+    "time interval can't be null" to "time interval can't be null",
+    "Access Key is not a valid Base32 encoding" to "Access Key is not a valid Base32 encoding",
 )
 
 
@@ -228,7 +238,18 @@ val languageCN: Map<String, String> = mapOf(
     "restoreFormWebDav" to "从WebDav恢复备份",
     "Sync" to "同步",
     "SyncFromLastBackup" to "同步最后一次备份",
-    "Copied" to "已复制!"
+    "Copied" to "已复制!",
+
+    // code Ui notice
+    "please input website account" to "请输入站点账号",
+    "account can't be null" to "账号不能为空",
+    "please input vendor" to "请输入站点名称",
+    "vendor can't be null" to "站点名称不能为空",
+    "please input access key" to "请输入访问键",
+    "access key can't be null" to "访问键不能为空",
+    "please input time interval" to "请输入 time interval",
+    "time interval can't be null" to "time interval 不能为空",
+    "Access Key is not a valid Base32 encoding" to "访问键不是有效的Base32加密",
 
 )
 val locales: Map<String, Map<String, String>> = mapOf(

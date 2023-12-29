@@ -46,7 +46,7 @@ class HomeViewModel : BaseViewModel() {
                 type = item.type!!,
                 vindor = item.vendor!!,
                 // key不能手动修改 导出的是加密过的
-                key = Base32.encode(item.key),
+                key = Base32.encode(item.key!!),
                 time = item.time!!,
                 count = item.counter!!,
                 digits = item.length!!,
