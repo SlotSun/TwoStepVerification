@@ -2,8 +2,8 @@ package com.slot.twostepverification.utils.otp;
 
 
 
-import com.slot.twostepverification.crypto.otp.HOTP;
-import com.slot.twostepverification.crypto.otp.OTP;
+import com.slot.twostepverification.utils.crypto.otp.HOTP;
+import com.slot.twostepverification.utils.crypto.otp.OTP;
 
 import org.json.JSONException;
 import org.json.JSONObject;

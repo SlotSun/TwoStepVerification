@@ -1,4 +1,4 @@
-package com.slot.twostepverification.crypto;
+package com.slot.twostepverification.utils.crypto;
 
 public class CryptResult {
     private byte[] _data;

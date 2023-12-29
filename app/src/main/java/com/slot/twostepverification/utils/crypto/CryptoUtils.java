@@ -1,8 +1,8 @@
-package com.slot.twostepverification.crypto;
+package com.slot.twostepverification.utils.crypto;
 
 import android.os.Build;
 
-import com.slot.twostepverification.crypto.bc.SCrypt;
+import com.slot.twostepverification.utils.crypto.bc.SCrypt;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

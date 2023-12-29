@@ -1,8 +1,8 @@
 package com.slot.twostepverification.utils.otp;
 
 
-import com.slot.twostepverification.crypto.otp.OTP;
-import com.slot.twostepverification.crypto.otp.TOTP;
+import com.slot.twostepverification.utils.crypto.otp.OTP;
+import com.slot.twostepverification.utils.crypto.otp.TOTP;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

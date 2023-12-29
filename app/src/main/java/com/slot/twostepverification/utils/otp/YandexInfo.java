@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
-import com.slot.twostepverification.crypto.otp.YAOTP;
+import com.slot.twostepverification.utils.crypto.otp.YAOTP;
 
 import org.json.JSONException;
 import org.json.JSONObject;

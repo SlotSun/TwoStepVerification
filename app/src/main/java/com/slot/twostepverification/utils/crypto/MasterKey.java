@@ -1,4 +1,4 @@
-package com.slot.twostepverification.crypto;
+package com.slot.twostepverification.utils.crypto;
 
 import java.io.IOException;
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package com.slot.twostepverification.crypto.otp;
+package com.slot.twostepverification.utils.crypto.otp;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;

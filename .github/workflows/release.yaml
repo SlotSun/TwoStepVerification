@@ -41,10 +41,10 @@ jobs:
 
       - name: Release Apk Sign
         run: |
-          echo releaseStoreFile='./key.jks' >> gradle.properties
           echo releaseKeyAlias ='${{ secrets.RELEASE_KEY_ALIAS }}' >> gradle.properties
           echo releaseKeyPassword ='${{ secrets.RELEASE_KEY_PASSWORD }}' >> gradle.properties
           echo releaseStorePassword ='${{ secrets.RELEASE_STORE_PASSWORD }}' >> gradle.properties
+          echo releaseStoreFile='./key.jks' >> gradle.properties
           echo ${{ secrets.RELEASE_KEY_STORE }} | base64 --decode > $GITHUB_WORKSPACE/app/key.jks
 
       - name: Unify Version Name

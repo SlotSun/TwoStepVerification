@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 
-import com.slot.twostepverification.crypto.otp.MOTP;
+import com.slot.twostepverification.utils.crypto.otp.MOTP;
 
 import org.json.JSONException;
 import org.json.JSONObject;
