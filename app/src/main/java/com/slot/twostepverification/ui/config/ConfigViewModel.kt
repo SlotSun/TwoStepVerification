@@ -81,4 +81,6 @@ class ConfigViewModel : BaseViewModel() {
         DataStoreUtils.putSyncData(LOCALE, key)
     }
 
+
+
 }

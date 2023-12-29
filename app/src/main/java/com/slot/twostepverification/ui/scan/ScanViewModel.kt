@@ -16,25 +16,16 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.TextRecognizer
-import com.google.mlkit.vision.text.chinese.ChineseTextRecognizerOptions
-import com.slot.twostepverification.const.locale
-import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.VerificationItem
+import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.utils.camera.CameraConfig
-import com.slot.twostepverification.utils.camera.cropTextImage
 import com.slot.twostepverification.utils.otp.GoogleAuth
 import com.slot.twostepverification.utils.otp.GoogleAuthInfoException
-import com.slot.twostepverification.utils.permission.Permissions
-import com.slot.twostepverification.utils.permission.PermissionsCompat
-import com.slot.twostepverification.utils.showToasts
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import splitties.init.appCtx
 import java.util.concurrent.Executors
 
 data class ScanUIState(
@@ -51,34 +42,12 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
         BarcodeScannerOptions.Builder()
             .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
     )
-
-
-    private val textRecognizer: TextRecognizer = TextRecognition.getClient(
-        ChineseTextRecognizerOptions.Builder().build()
-    )
-    var scanText = mutableStateOf("")
     var scanBarcodeRes = mutableStateOf(false)
-
-    // select_picture
 
 
     // 是否开启闪光灯
     var enableTorch: MutableState<Boolean> = mutableStateOf(false)
-
-    private var useOCR = false
-
-
     private var enableAnalysis = true
-
-    fun getCameraPermission(){
-        PermissionsCompat.Builder()
-            .addPermissions(*Permissions.Group.CAMERA)
-            .rationale(locale("需要Camera权限"))
-            .onGranted {
-               appCtx.showToasts("获取权限成功")
-            }
-            .request()
-    }
 
     // 重新识别
     fun analyzeReStart() {
@@ -107,31 +76,10 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
 
             val inputImage = InputImage.fromMediaImage(mediaImage, image.imageInfo.rotationDegrees)
 
-            val task = if (useOCR) {
-
-                // OCR 识别, 截取扫描框图片
-                val bitmap = cropTextImage(image) ?: return@setAnalyzer
-
-                val inputImageCrop = InputImage.fromBitmap(bitmap, 0)
-
-                textRecognizer.process(inputImageCrop)
-                    .addOnSuccessListener {
-                        val text = it.text
-                        scanText.value = text
-                        analyzeReStart()
-
-                    }.addOnFailureListener {
-                        Log.d("zzz", "onFailure")
-                        scanText.value = "onFailure"
-
-                        analyzeReStart()
-                    }
-
-            } else {
-                analyzeBarcode(inputImage)
-            }
+            val task = analyzeBarcode(inputImage)
 
             task.addOnCompleteListener {
+                analyzeStop()
                 image.close()
             }
         }
