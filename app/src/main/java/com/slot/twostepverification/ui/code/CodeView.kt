@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,7 +49,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -82,7 +82,7 @@ fun CodeView(
 
     CollapsingToolbarScaffold(
         modifier = Modifier
-            .navigationBarsPadding()
+            .systemBarsPadding()
             .imeNestedScroll(),
         state = state,
         scrollStrategy = ScrollStrategy.ExitUntilCollapsed,
@@ -92,7 +92,6 @@ fun CodeView(
             }
         },
     ) {
-        // todo:切换按钮+输入信息
         SwitchButton()
         FloatingActionButton(
             modifier = Modifier
