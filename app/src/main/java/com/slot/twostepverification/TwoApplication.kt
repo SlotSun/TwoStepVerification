@@ -28,8 +28,12 @@ class TwoApplication : Application() {
             val locale = DataStoreUtils.readStringData(key = LOCALE)
             val localeNative  = Locale.current.language
             localeState.value = locales.getValue(
-                if (locale == "" || localeNative == "en") {
-                    "English"
+                if (locale == "") {
+                    when(localeNative){
+                        "zh" -> "简体中文"
+                        "en" -> "English"
+                        else -> "English"
+                    }
                 } else {
                     locale
                 }
