@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.sp
 const val APP_TAG = "TwoStepV"
 const val CHANGED_THEME = "CHANGED_THEME"
 const val DYNAMIC_COLOR = "DYNAMIC_COLOR"
+const val SECURITY_OPEN = "SECURITY_OPEN"
 
 const val LOCALE = "LOCALE" ///app语言
 const val TOTP_TIME = 30000 /// TOTP的循环时间

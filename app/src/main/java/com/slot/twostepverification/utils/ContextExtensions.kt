@@ -13,6 +13,7 @@ import android.app.PendingIntent.getService
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
@@ -29,6 +30,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import androidx.fragment.app.FragmentActivity
 import androidx.preference.PreferenceManager
 import com.slot.twostepverification.utils.log.printOnDebug
 import splitties.systemservices.clipboardManager
@@ -159,6 +161,20 @@ fun Context.getCompatDrawable(@DrawableRes id: Int): Drawable? = ContextCompat.g
 
 fun Context.getCompatColorStateList(@ColorRes id: Int): ColorStateList? =
     ContextCompat.getColorStateList(this, id)
+
+/**
+ *  获得context的FragmentActivity
+ */
+fun Context.getFragmentActivity(): FragmentActivity? {
+    var currentContext = this
+    while (currentContext is ContextWrapper) {
+        if (currentContext is FragmentActivity) {
+            return currentContext
+        }
+        currentContext = currentContext.baseContext
+    }
+    return null
+}
 
 fun Context.restart() {
     val intent: Intent? = packageManager.getLaunchIntentForPackage(packageName)

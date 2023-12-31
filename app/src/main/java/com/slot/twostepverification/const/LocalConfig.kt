@@ -39,6 +39,11 @@ object LocalConfig {
             DataStoreUtils.saveSyncBooleanData("recordLog", value)
         }
 
+    // 指纹识别
+    val securityOpenState: MutableState<Boolean> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        mutableStateOf(DataStoreUtils.getSyncData(SECURITY_OPEN, false))
+    }
+
     // webdav config
     var user: String
         get() = DataStoreUtils.getSyncData("user", default = "")
