@@ -98,6 +98,7 @@ class ConfigViewModel : BaseViewModel() {
     ) {
         if (LocalConfig.securityOpenState.value) {
             LocalConfig.securityOpenState.value = !LocalConfig.securityOpenState.value
+            DataStoreUtils.putSyncData(SECURITY_OPEN, false)
         } else {
             authenticate(
                 title = title,
@@ -106,10 +107,11 @@ class ConfigViewModel : BaseViewModel() {
                 onError = onError,
                 onSuccess = {
                     LocalConfig.securityOpenState.value = !LocalConfig.securityOpenState.value
+                    DataStoreUtils.putSyncData(SECURITY_OPEN, true)
                     context.showToasts("开启指纹验证成功")
                 }
             )
         }
-        DataStoreUtils.putSyncData(SECURITY_OPEN, LocalConfig.securityOpenState.value)
+
     }
 }

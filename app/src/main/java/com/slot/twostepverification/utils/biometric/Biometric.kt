@@ -10,6 +10,7 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.utils.getFragmentActivity
+import com.slot.twostepverification.utils.showToasts
 
 /**
  *  安全认证
@@ -28,6 +29,7 @@ fun authenticate(
 
     // Android 10（API 级别 29）及更低版本不支持以下身份验证器类型组合:DEVICE_CREDENTIAL 和 BIOMETRIC_STRONG | DEVICE_CREDENTIAL
     if (!keyguardManager.isDeviceSecure) {
+        context.showToasts(locale("system_has_not_registered_any_authentication_method"))
         return
     }
 
@@ -50,8 +52,8 @@ fun authenticate(
         BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
 
     val promptInfo = BiometricPrompt.PromptInfo.Builder()
-        .setTitle(locale("app_name"))
-        .setSubtitle(title)
+        .setTitle(title)
+        .setSubtitle(locale("verify_your_identity"))
         .setAllowedAuthenticators(authenticators)
         .build()
 

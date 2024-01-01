@@ -1,6 +1,7 @@
 package com.slot.twostepverification
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
@@ -27,7 +28,9 @@ import com.slot.twostepverification.ui.libs.LibsScreen
 import com.slot.twostepverification.ui.nav.NavScreen
 import com.slot.twostepverification.ui.nav.webdav.WebDavView
 import com.slot.twostepverification.ui.scan.ScanView
+import com.slot.twostepverification.ui.splash.SplashScreen
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TwoNavGraph(
     navController: NavHostController,
@@ -80,6 +83,11 @@ fun TwoNavGraph(
             )
         },
     ) {
+        composable(TwoDestinations.SPLASH){
+            SplashScreen(
+                navNexEvent = {twoNavActions.navigateToMain()}
+            )
+        }
         composable(TwoDestinations.MAIN_ROUTE) {
             HomeScreen(
                 onNavigateToConfig = { twoNavActions.navigateToConfig() },
@@ -137,7 +145,6 @@ fun TwoNavGraph(
         composable(TwoDestinations.CODE) {
             CodeView(
                 onNavigateBack = { twoNavActions.popBackStackLast() }
-
             )
         }
 
@@ -147,6 +154,12 @@ fun TwoNavGraph(
 class TwoNavActions(
     private val navController: NavHostController
 ) {
+
+    val navigateToMain: () -> Unit = {
+        // 先退栈
+        navController.popBackStack()
+        navigate(TwoDestinations.MAIN_ROUTE)
+    }
     // 设置
     val navigateToConfig: () -> Unit = {
         navigate(TwoDestinations.CONFIG)
@@ -193,6 +206,7 @@ class TwoNavActions(
 }
 
 object TwoDestinations {
+    const val SPLASH = "splash"
     const val MAIN_ROUTE = "main_route"
     const val CONFIG = "config"
     const val BACKUP = "backup"

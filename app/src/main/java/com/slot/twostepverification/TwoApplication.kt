@@ -11,7 +11,9 @@ import com.slot.twostepverification.const.DYNAMIC_COLOR
 import com.slot.twostepverification.const.LOCALE
 import com.slot.twostepverification.const.LocalConfig.dynamicColorState
 import com.slot.twostepverification.const.LocalConfig.localeState
+import com.slot.twostepverification.const.LocalConfig.securityOpenState
 import com.slot.twostepverification.const.LocalConfig.themeTypeState
+import com.slot.twostepverification.const.SECURITY_OPEN
 import com.slot.twostepverification.const.locales
 import com.slot.twostepverification.utils.data.DataStoreUtils
 import com.slot.twostepverification.utils.https.OkHelper
@@ -42,6 +44,8 @@ class TwoApplication : Application() {
             themeTypeState.value = DataStoreUtils.readIntData(key = CHANGED_THEME)
             // 是否动态主题
             dynamicColorState.value = DataStoreUtils.readBooleanData(key = DYNAMIC_COLOR)
+            // 是否开启安全认证
+            securityOpenState.value = DataStoreUtils.readBooleanData(key = SECURITY_OPEN)
         }
     }
 
