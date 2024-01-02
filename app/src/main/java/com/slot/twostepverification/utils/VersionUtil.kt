@@ -4,8 +4,6 @@ import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.exception.NoStackTraceException
 import com.slot.twostepverification.utils.coroutine.Coroutine
 import com.slot.twostepverification.utils.https.get
-import kotlinx.coroutines.CoroutineScope
-import splitties.init.appCtx
 
 object VersionUtil {
 

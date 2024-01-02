@@ -7,8 +7,6 @@ import androidx.annotation.Keep
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.core.net.toUri
 import com.slot.twostepverification.ui.theme.getDefaultThemeId
 import com.slot.twostepverification.utils.data.DataStoreUtils
 import splitties.init.appCtx
