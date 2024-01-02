@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.slot.twostepverification.const.LocalConfig
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.ui.components.LoadingContent
 import com.slot.twostepverification.utils.widget.CtrTextField
 
@@ -77,7 +78,7 @@ fun WebDavView(
                 },
                 title = {
                     Text(
-                        text = "配置WebDav",
+                        text = locale("WebDav Config"),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -90,7 +91,7 @@ fun WebDavView(
                     viewModel.loginWebDav()
                 },
                 icon = { Icon(Icons.Filled.AddLink, "Localized Description") },
-                text = { Text(text = "Login") },
+                text = { Text(text = locale("Login")) },
             )
         },
         snackbarHost = {
@@ -112,7 +113,7 @@ fun WebDavView(
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
-                        label = "链接地址",
+                        label = locale("Link"),
                         onValueChange = {
                             viewModel.updateDomain(domain = it)
                         }
@@ -123,7 +124,7 @@ fun WebDavView(
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
-                        label = "用户名",
+                        label = locale("UserName"),
                         onValueChange = {
                             viewModel.updateUser(user = it)
                         }
@@ -133,7 +134,7 @@ fun WebDavView(
                         modifier = Modifier
                             .padding(start = 10.dp, end = 10.dp)
                             .fillMaxWidth(),
-                        label = "密码",
+                        label = locale("Password"),
                         onValueChange = {
                             viewModel.updatePassword(it)
                         },

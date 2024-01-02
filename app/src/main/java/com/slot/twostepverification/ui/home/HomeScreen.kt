@@ -235,7 +235,7 @@ fun HomeScreen(
                         }
                     ) {
                         ListItem(
-                            headlineContent = { Text(text = "删除") },
+                            headlineContent = { Text(text = locale("DEL")) },
                             leadingContent = {
                                 Icon(
                                     imageVector = Icons.Filled.Delete,

@@ -3,6 +3,7 @@ package com.slot.twostepverification.ui.nav.webdav
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.slot.twostepverification.const.LocalConfig
+import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.help.TwoHelper
 import com.slot.twostepverification.data.entity.Authorization
 import com.slot.twostepverification.utils.webdav.WebDav
@@ -51,19 +52,19 @@ class WebDavViewModel : ViewModel() {
     fun loginWebDav() {
         if (user.isEmpty()) {
             _webDavUiState.update {
-                it.copy(message = "用户名不能为空")
+                it.copy(message = locale("account can't be null"))
             }
             return
         }
         if (password.isEmpty()) {
             _webDavUiState.update {
-                it.copy(message = "密码不能为空")
+                it.copy(message = locale("password can't be null"))
             }
             return
         }
         if (domain.isEmpty()) {
             _webDavUiState.update {
-                it.copy(message = "网络地址不能为空")
+                it.copy(message = locale( "website can't be empty"))
             }
             return
         }
@@ -90,7 +91,7 @@ class WebDavViewModel : ViewModel() {
                     it.copy(
                         isLogin = authIsOK,
                         isLoading = false,
-                        message = "登录成功"
+                        message = locale("login successful")
                     )
                 }
             } else {
@@ -100,7 +101,7 @@ class WebDavViewModel : ViewModel() {
                     it.copy(
                         isLogin = authIsOK,
                         isLoading = false,
-                        message = "登录失败"
+                        message = locale("login failed")
                     )
                 }
             }

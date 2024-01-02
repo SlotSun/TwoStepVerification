@@ -95,7 +95,7 @@ fun NavScreen(
                         ),
                         title = {
                             Text(
-                                text = "选择恢复文件",
+                                text = locale("select restore file"),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
