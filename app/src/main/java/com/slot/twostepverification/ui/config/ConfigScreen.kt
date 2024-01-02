@@ -40,10 +40,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.slot.twostepverification.BuildConfig
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.titleStyle
 import com.slot.twostepverification.const.ubTitleStyle
+import com.slot.twostepverification.ui.components.LoadingDialog
 import com.slot.twostepverification.ui.config.locale.localeSelector
 import com.slot.twostepverification.ui.theme.ThemeDialog
 import com.slot.twostepverification.utils.showToasts
@@ -94,6 +96,7 @@ fun ConfigScreen(
             )
         }
     ) { innerPadding ->
+        LoadingDialog(configUiState.isLoading)
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -231,6 +234,10 @@ fun ConfigScreen(
                 title = locale("project_homepage"),
                 ubTitle = locale("View_Source_Code_and_find_job")
             ) { viewModel.openGithub(ctx = ctx) }
+            configItem(
+                title = locale("检查更新"),
+                ubTitle = locale("当前版本:")+ BuildConfig.VERSION_NAME
+            ) { viewModel.checkUpdate(ctx = ctx) }
 
             if (configUiState.openThemeDialog) {
                 ThemeDialog(

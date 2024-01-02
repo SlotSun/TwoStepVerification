@@ -1,6 +1,9 @@
 package com.slot.twostepverification.const
 
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.Keep
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -8,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.core.net.toUri
 import com.slot.twostepverification.ui.theme.getDefaultThemeId
 import com.slot.twostepverification.utils.data.DataStoreUtils
+import splitties.init.appCtx
 
 
 object LocalConfig {
@@ -94,10 +98,27 @@ object LocalConfig {
         }
 
     // app版本号
-    var versionCode
-        get() = DataStoreUtils.readLongData("versionCode", default = 0)
-        set(value) {
-            DataStoreUtils.saveSyncLongData("versionCode", value)
-        }
+    val appInfo: AppInfo by lazy {
+        val appInfo = AppInfo()
+        @Suppress("DEPRECATION")
+        appCtx.packageManager.getPackageInfo(appCtx.packageName, PackageManager.GET_ACTIVITIES)
+            ?.let {
+                appInfo.versionName = it.versionName
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    appInfo.versionCode = it.longVersionCode
+                } else {
+                    @Suppress("DEPRECATION")
+                    appInfo.versionCode = it.versionCode.toLong()
+                }
+            }
+        appInfo
+    }
+    @Keep
+    data class AppInfo(
+        var versionCode: Long = 0L,
+        var versionName: String = ""
+    )
+
+
     val onlyLatestBackup get() = DataStoreUtils.readBooleanData("onlyLatestBackup", default = false)
 }

@@ -1,23 +1,20 @@
 package com.slot.twostepverification.ui.config
 
-import android.app.KeyguardManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
 import com.slot.twostepverification.const.DYNAMIC_COLOR
 import com.slot.twostepverification.const.LOCALE
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.LocalConfig.localeState
 import com.slot.twostepverification.const.SECURITY_OPEN
 import com.slot.twostepverification.const.locale
+import com.slot.twostepverification.utils.VersionUtil
 import com.slot.twostepverification.utils.biometric.authenticate
 import com.slot.twostepverification.utils.data.DataStoreUtils
-import com.slot.twostepverification.utils.getFragmentActivity
 import com.slot.twostepverification.utils.showToast
 import com.slot.twostepverification.utils.showToasts
 import com.slot.twostepverification.viewmodel.BaseViewModel
@@ -28,7 +25,8 @@ import kotlinx.coroutines.flow.update
 
 data class ConfigUIState(
     var openThemeDialog: Boolean = false,
-    var openLocaleDialog: Boolean = false
+    var openLocaleDialog: Boolean = false,
+    val isLoading:Boolean = false,
 )
 
 class ConfigViewModel : BaseViewModel() {
@@ -42,6 +40,25 @@ class ConfigViewModel : BaseViewModel() {
         ctx.startActivity(intent)
     }
 
+    // 根据github release 更新
+    fun checkUpdate(ctx: Context) {
+        _uiState.update {
+            it.copy(
+                isLoading = true
+            )
+        }
+        VersionUtil.check().onSuccess {
+            ctx.showToasts("有")
+        }.onError {
+            ctx.showToasts("检查更新\n${it.localizedMessage}")
+        }.onFinally {
+            _uiState.update {
+                it.copy(
+                    isLoading = false
+                )
+            }
+        }
+    }
     // 开启动态取色
     fun setDynamicColor(it: Boolean, ctx: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && it) {
