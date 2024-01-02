@@ -66,20 +66,8 @@ fun CameraViewPermission(
     enableTorch: Boolean = false,
     focusOnTap: Boolean = false
 ) {
-
     val context = LocalContext.current
-//    CameraView(
-//        modifier,
-//        preview = preview,
-//        imageCapture = imageCapture,
-//        imageAnalysis = imageAnalysis,
-//        scaleType = scaleType,
-//        cameraSelector = cameraSelector,
-//        focusOnTap = focusOnTap,
-//        enableTorch = enableTorch,
-//    )
-    PermissionView(
-    ) {
+    PermissionView {
         CameraView(
             modifier,
             preview = preview,

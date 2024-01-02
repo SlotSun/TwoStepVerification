@@ -79,8 +79,16 @@ object Restore {
             Log.d("ConfigJson", json)
             val type = object : TypeToken<Map<String, Any>>() {}.type
             val res: Map<String, Any> = GSON.fromJson(json, type)
+            // 这里json int 转出来变成了 float类型 需要修复
             res.forEach { (key, value) ->
-                DataStoreUtils.putData(key= key, value = value)
+                DataStoreUtils.putData(key = key, value = value.let {
+                    if (it is Long && it <= 100) {
+                        it.toInt()
+                    } else {
+                        it
+                    }
+                }
+                )
             }
         }?.onFailure {
             AppLog.put("恢复配置出错\n${it.localizedMessage}", it)

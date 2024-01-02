@@ -40,7 +40,7 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
     val imageAnalysis: ImageAnalysis = config.options(ImageAnalysis.Builder())
     private val barcodeScanner: BarcodeScanner = BarcodeScanning.getClient(
         BarcodeScannerOptions.Builder()
-            .setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
+            .setBarcodeFormats(Barcode.FORMAT_CODE_128, Barcode.FORMAT_QR_CODE).build()
     )
     var scanBarcodeRes = mutableStateOf(false)
 
@@ -77,26 +77,24 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
             val inputImage = InputImage.fromMediaImage(mediaImage, image.imageInfo.rotationDegrees)
 
             val task = analyzeBarcode(inputImage)
-
             task.addOnCompleteListener {
-                analyzeStop()
                 image.close()
             }
         }
     }
 
     // 二维码识别
-    fun analyzeBarcode(inputImage: InputImage,select: Boolean = false): Task<out Any> {
+    fun analyzeBarcode(inputImage: InputImage, select: Boolean = false): Task<out Any> {
         return barcodeScanner.process(inputImage)
             .addOnSuccessListener {
                 try {
 //                    if (it.size != 0) {
-                        val itemList = getScanResult(it,select)
-                        if (itemList.isNotEmpty()) {
-                            viewModelScope.launch {
-                                scanBarcodeRes.value = true
-                                TwoHelper.updateItems(items = itemList)
-                            }
+                    val itemList = getScanResult(it, select)
+                    if (itemList.isNotEmpty()) {
+                        viewModelScope.launch {
+                            scanBarcodeRes.value = true
+                            TwoHelper.updateItems(items = itemList)
+                        }
 //                        }
                     } else {
                         analyzeReStart()
@@ -131,9 +129,12 @@ class ScanViewModel(config: CameraConfig) : ViewModel() {
 
 
     @Throws(GoogleAuthInfoException::class)
-    private fun getScanResult(list: List<Barcode>,select:Boolean = false): List<VerificationItem> {
+    private fun getScanResult(
+        list: List<Barcode>,
+        select: Boolean = false
+    ): List<VerificationItem> {
         // 设备选择
-        if (list.isEmpty() && select ){
+        if (list.isEmpty() && select) {
             throw Exception("")
         }
         list.forEach { barcode ->
