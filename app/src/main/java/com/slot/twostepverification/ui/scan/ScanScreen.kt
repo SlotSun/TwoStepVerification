@@ -49,7 +49,7 @@ import github.leavesczy.matisse.Matisse
 import github.leavesczy.matisse.MatisseContract
 import github.leavesczy.matisse.MediaResource
 import github.leavesczy.matisse.MimeType
-import github.leavesczy.matisse.NothingCaptureStrategy
+import github.leavesczy.matisse.SmartCaptureStrategy
 import java.io.IOException
 
 /*
@@ -96,7 +96,6 @@ fun ScanView(
         maxSelectable = 1,
         mediaFilter = DefaultMediaFilter(supportedMimeTypes = MimeType.ofImage()),
         imageEngine = CoilImageEngine(),
-        captureStrategy = NothingCaptureStrategy
     )
 
 
