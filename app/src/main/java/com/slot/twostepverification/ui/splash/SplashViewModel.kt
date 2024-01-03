@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
@@ -21,7 +20,7 @@ class SplashViewModel : BaseViewModel() {
         keyguardLauncher: ManagedActivityResultLauncher<Intent, ActivityResult>,
     ) {
         viewModelScope.launch {
-            delay(1500)
+            delay(500)
             if (LocalConfig.securityOpenState.value){
                 authenticate(
                     title = locale("app_name"),
