@@ -202,3 +202,5 @@
 -keepclassmembers class kotlin.coroutines.SafeContinuation {
     volatile <fields>;
 }
+
+-keep,allowobfuscation,allowshrinking class github.leavesczy.matisse.**{*;}
