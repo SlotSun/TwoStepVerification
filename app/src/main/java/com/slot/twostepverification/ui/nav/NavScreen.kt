@@ -1,6 +1,5 @@
 package com.slot.twostepverification.ui.nav
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -37,9 +36,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -51,15 +47,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.slot.twostepverification.const.LOCALE
 import com.slot.twostepverification.const.LocalConfig
 import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.const.titleStyle
 import com.slot.twostepverification.const.ubTitleStyle
-import com.slot.twostepverification.utils.camera.utils.PermissionClickView
-import com.slot.twostepverification.utils.camera.utils.PermissionView
-import com.slot.twostepverification.utils.camera.utils.StorePermissionTextProvider
-import com.slot.twostepverification.utils.permission.Permissions
 
 /**
  *  数据备份页面
@@ -293,7 +284,12 @@ fun NavScreen(
                 modifier = Modifier
                     .padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
                     .clickable {
-                        viewModel.backUp()
+                        if (viewModel.hasPermission()){
+                            viewModel.backUp()
+                        }else{
+                            launcher.launch(null)
+                        }
+
                     },
                 headlineContent = {
                     Text(

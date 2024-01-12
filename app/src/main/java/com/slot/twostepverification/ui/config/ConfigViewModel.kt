@@ -48,9 +48,9 @@ class ConfigViewModel : BaseViewModel() {
             )
         }
         VersionUtil.check().onSuccess {
-            ctx.showToasts("有")
+            ctx.showToasts("新版本:\n${it.tagName}")
         }.onError {
-            ctx.showToasts("检查更新\n${it.localizedMessage}")
+            ctx.showToasts("检查更新:\n${it.localizedMessage}")
         }.onFinally {
             _uiState.update {
                 it.copy(

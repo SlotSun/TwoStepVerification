@@ -353,9 +353,4 @@ fun OtpView(
                 .weight(0.5f)
         )
     }
-//    Spacer(
-//        modifier = Modifier.windowInsetsBottomHeight(
-//            WindowInsets.systemBars
-//        )
-//    )
 }

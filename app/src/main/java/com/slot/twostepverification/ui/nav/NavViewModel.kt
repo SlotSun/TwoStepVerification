@@ -1,7 +1,9 @@
 package com.slot.twostepverification.ui.nav
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.slot.twostepverification.const.LocalConfig
@@ -9,11 +11,11 @@ import com.slot.twostepverification.const.locale
 import com.slot.twostepverification.help.WebDavHelper
 import com.slot.twostepverification.help.store.Backup
 import com.slot.twostepverification.utils.AppLog
-import com.slot.twostepverification.utils.permission.Permissions
-import com.slot.twostepverification.utils.showToasts
 import com.slot.twostepverification.utils.coroutine.Coroutine
 import com.slot.twostepverification.utils.isContentScheme
+import com.slot.twostepverification.utils.permission.Permissions
 import com.slot.twostepverification.utils.permission.PermissionsCompat
+import com.slot.twostepverification.utils.showToasts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -140,10 +142,6 @@ class NavViewModel : ViewModel() {
         }
     }
 
-    fun selectRestoreFileFromLocal() {
-
-    }
-
     /**
      *  文件从数据库导出并加密
      */
@@ -180,6 +178,15 @@ class NavViewModel : ViewModel() {
                 uploadData()
             }
             .request()
+    }
+
+    fun hasPermission(): Boolean {
+        appCtx.contentResolver.persistedUriPermissions.forEach {
+            if (uiState.value.filePath == it.uri) {
+                return true
+            }
+        }
+        return false
     }
 
     /**

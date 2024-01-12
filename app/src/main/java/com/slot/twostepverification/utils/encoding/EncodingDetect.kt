@@ -52,6 +52,7 @@ object EncodingDetect {
 
     /**
      * 得到文件的编码
+     * @param filePath 文件路径
      */
     fun getEncode(filePath: String): String {
         return getEncode(File(filePath))
@@ -59,6 +60,7 @@ object EncodingDetect {
 
     /**
      * 得到文件的编码
+     * @param file 文件名
      */
     fun getEncode(file: File): String {
         val tempByte = getFileBytes(file)
